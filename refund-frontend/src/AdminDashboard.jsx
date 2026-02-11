@@ -11,7 +11,7 @@ export default function AdminDashboard() {
 
     // Load all students
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/admin/students")
+        fetch("https://refund-backend-1.onrender.com/admin/students")
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
         };
 
         try {
-            const res = await fetch("http://127.0.0.1:8000/admin/student", {
+            const res = await fetch("https://refund-backend-1.onrender.com/admin/student", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

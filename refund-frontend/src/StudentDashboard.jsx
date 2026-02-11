@@ -20,7 +20,7 @@ export default function StudentDashboard() {
 
     // 🔹 Check if student already submitted
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/student/${studentId}`)
+        fetch(`https://refund-backend-1.onrender.com/student/${studentId}`)
             .then((res) => {
                 if (res.status === 404) return null;
                 return res.json();
@@ -49,7 +49,7 @@ export default function StudentDashboard() {
             status: "PENDING",
         };
 
-        const res = await fetch("http://127.0.0.1:8000/admin/student", {
+        const res = await fetch("https://refund-backend-1.onrender.com/admin/student", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

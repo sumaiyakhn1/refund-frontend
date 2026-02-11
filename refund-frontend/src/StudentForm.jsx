@@ -55,7 +55,7 @@ export default function StudentForm() {
         };
 
         try {
-            const res = await fetch("http://127.0.0.1:8000/admin/student", {
+            const res = await fetch("https://refund-backend-1.onrender.com/admin/student", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
