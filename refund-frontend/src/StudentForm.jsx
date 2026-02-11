@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function StudentForm() {
+    const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
     const studentId = localStorage.getItem("student_id");
 
     const [formData, setFormData] = useState({
@@ -55,7 +56,8 @@ export default function StudentForm() {
         };
 
         try {
-            const res = await fetch("https://refund-backend-1.onrender.com/admin/student", {
+            console.log("Submitting to:", `${API_URL}/admin/student`);
+            const res = await fetch(`${API_URL}/admin/student`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -63,11 +65,17 @@ export default function StudentForm() {
                 body: JSON.stringify(payload),
             });
 
-            const data = await res.json();
-
             if (!res.ok) {
-                throw new Error(data.detail || "Failed to save");
+                const text = await res.text();
+                try {
+                    const errorData = JSON.parse(text);
+                    throw new Error(errorData.detail || `Failed to save: ${res.status}`);
+                } catch (e) {
+                    throw new Error(`Failed to save: ${res.status} ${text}`);
+                }
             }
+
+            const data = await res.json();
 
             setMsg("✅ Details saved successfully");
         } catch (err) {

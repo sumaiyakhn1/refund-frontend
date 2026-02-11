@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function AdminDashboard() {
+    const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
     const [students, setStudents] = useState([]);
     const [msg, setMsg] = useState("");
 
@@ -11,8 +12,14 @@ export default function AdminDashboard() {
 
     // Load all students
     useEffect(() => {
-        fetch("https://refund-backend-1.onrender.com/admin/students")
-            .then((res) => res.json())
+        console.log("Fetching students from:", `${API_URL}/admin/students`);
+        fetch(`${API_URL}/admin/students`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
             .then((data) => {
                 if (Array.isArray(data)) {
                     setStudents(data);
@@ -50,7 +57,7 @@ export default function AdminDashboard() {
         };
 
         try {
-            const res = await fetch("https://refund-backend-1.onrender.com/admin/student", {
+            const res = await fetch(`${API_URL}/admin/student`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

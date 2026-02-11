@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function StudentDashboard() {
+    const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
     const studentId = localStorage.getItem("student_id");
 
     const [loading, setLoading] = useState(true);
@@ -20,9 +21,13 @@ export default function StudentDashboard() {
 
     // 🔹 Check if student already submitted
     useEffect(() => {
-        fetch(`https://refund-backend-1.onrender.com/student/${studentId}`)
+        console.log("Fetching student status from:", `${API_URL}/student/${studentId}`);
+        fetch(`${API_URL}/student/${studentId}`)
             .then((res) => {
                 if (res.status === 404) return null;
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
                 return res.json();
             })
             .then((data) => {
@@ -31,7 +36,10 @@ export default function StudentDashboard() {
                 }
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch((err) => {
+                console.error("Failed to fetch student status:", err);
+                setLoading(false);
+            });
     }, [studentId]);
 
     const handleChange = (e) => {
@@ -49,7 +57,7 @@ export default function StudentDashboard() {
             status: "PENDING",
         };
 
-        const res = await fetch("https://refund-backend-1.onrender.com/admin/student", {
+        const res = await fetch(`${API_URL}/admin/student`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

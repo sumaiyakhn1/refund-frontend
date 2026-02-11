@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function Login() {
+    const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
     const [role, setRole] = useState("student"); // 'student' | 'admin'
     const [id, setId] = useState("");
     const [password, setPassword] = useState(""); // DOB or Admin Password
@@ -20,7 +21,9 @@ export default function Login() {
 
         try {
             // Using the same endpoint but logic differs slightly
-            const res = await fetch("http://localhost:8000/login", {
+            // Using the same endpoint but logic differs slightly
+            console.log("Logging in with:", `${API_URL}/login`);
+            const res = await fetch(`${API_URL}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -29,11 +32,17 @@ export default function Login() {
                 }),
             });
 
-            const data = await res.json();
-
             if (!res.ok) {
-                throw new Error(data.detail || "Login failed");
+                const text = await res.text();
+                try {
+                    const errorData = JSON.parse(text);
+                    throw new Error(errorData.detail || `Login failed: ${res.status}`);
+                } catch (e) {
+                    throw new Error(`Login failed: ${res.status} ${text}`);
+                }
             }
+
+            const data = await res.json();
 
             // Role Mismatch Check
             if (data.role !== role) {
