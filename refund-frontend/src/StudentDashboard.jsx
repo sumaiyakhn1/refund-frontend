@@ -81,11 +81,16 @@ export default function StudentDashboard() {
         return (
             <div className="wrapper">
                 <div className="dashboard-header">
-                    <div>
-                        <h2 className="title" style={{ textAlign: "left" }}>Application Status</h2>
-                        <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
-                            Track your refund application
-                        </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+                        <div style={{ background: "#334155", padding: "8px", borderRadius: "8px" }}>
+                            <img src="/rksdlogo.png" alt="Logo" style={{ width: "100px" }} />
+                        </div>
+                        <div>
+                            <h2 className="title" style={{ textAlign: "left", marginBottom: 0 }}>Application Status</h2>
+                            <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
+                                Track your refund application
+                            </p>
+                        </div>
                     </div>
                     <button onClick={handleLogout} style={{ background: "#ef4444", padding: "8px 16px", fontSize: 12 }}>
                         Logout
@@ -159,11 +164,16 @@ export default function StudentDashboard() {
     return (
         <div className="wrapper">
             <div className="dashboard-header">
-                <div>
-                    <h2 className="title" style={{ textAlign: "left" }}>Refund Application</h2>
-                    <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
-                        Please submit your bank details
-                    </p>
+                <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+                    <div style={{ background: "#334155", padding: "8px", borderRadius: "8px" }}>
+                        <img src="/rksdlogo.png" alt="Logo" style={{ width: "100px" }} />
+                    </div>
+                    <div>
+                        <h2 className="title" style={{ textAlign: "left", marginBottom: 0 }}>Refund Application</h2>
+                        <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
+                            Please submit your bank details
+                        </p>
+                    </div>
                 </div>
                 <button onClick={handleLogout} style={{ background: "#ef4444", padding: "8px 16px", fontSize: 12 }}>
                     Logout

@@ -82,11 +82,16 @@ export default function AdminDashboard() {
     return (
         <div className="admin-wrapper">
             <div className="dashboard-header">
-                <div>
-                    <h2 className="title" style={{ textAlign: "left", marginBottom: 4 }}>Admin Dashboard</h2>
-                    <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
-                        Manage student applications and refunds
-                    </p>
+                <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+                    <div style={{ background: "#334155", padding: "8px", borderRadius: "8px" }}>
+                        <img src="/rksdlogo.png" alt="Logo" style={{ width: "100px" }} />
+                    </div>
+                    <div>
+                        <h2 className="title" style={{ textAlign: "left", marginBottom: 4 }}>Admin Dashboard</h2>
+                        <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
+                            Manage student applications and refunds
+                        </p>
+                    </div>
                 </div>
                 <button
                     onClick={handleLogout}

@@ -70,14 +70,22 @@ export default function Login() {
 
     return (
         <div className="wrapper">
-            <div style={{ textAlign: "center", marginBottom: 32 }}>
-                <img
-                    src="https://okiedokie-erp-images.s3.ap-south-1.amazonaws.com/Okie%20Dokie/2025/12/sourceURL/26aebcbe10f4ac5a3e8b-611ed1b9032568edd4f3-Okie_Dokie_App_icon__2___2_-removebg-preview.png"
-                    alt="Logo"
-                    style={{ width: "64px", marginBottom: "16px" }}
-                />
-                <h2 className="title">{role === 'admin' ? 'Admin Portal' : 'Student Portal'}</h2>
-                <p className="subtitle">Sign in to manage your refund applications</p>
+            <div style={{ textAlign: "center", marginBottom: "32px" }}>
+                <div style={{ background: "#334155", padding: "12px", borderRadius: "12px", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "24px" }}>
+                    <img
+                        src="/rksdlogo.png"
+                        alt="Logo"
+                        style={{ width: "180px" }}
+                    />
+                </div>
+                <div>
+                    <h2 style={{ margin: 0, fontSize: "24px", fontWeight: "700", color: "#334155" }}>
+                        {role === 'admin' ? 'Admin Portal' : 'Student Portal'}
+                    </h2>
+                    <p style={{ margin: 0, fontSize: "16px", color: "#64748b" }}>
+                        Sign in to manage your refund applications
+                    </p>
+                </div>
             </div>
 
             {/* TAB SYSTEM */}
