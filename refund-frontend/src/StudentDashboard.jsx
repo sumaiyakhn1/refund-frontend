@@ -54,6 +54,8 @@ export default function StudentDashboard() {
             ...form,
             fee_cleared: "NO",
             library_cleared: "NO",
+            scholarship_cleared: "NO",
+            registration_cleared: "NO",
             status: "PENDING",
         };
 
@@ -127,6 +129,22 @@ export default function StudentDashboard() {
                                 <div>
                                     <span className={`badge ${record.library_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}>
                                         {record.library_cleared === 'YES' ? 'CLEARED' : 'PENDING'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: 12, color: "#64748b" }}>Scholarship Clearance</label>
+                                <div>
+                                    <span className={`badge ${record.scholarship_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}>
+                                        {record.scholarship_cleared === 'YES' ? 'CLEARED' : 'PENDING'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: 12, color: "#64748b" }}>Registration Clearance</label>
+                                <div>
+                                    <span className={`badge ${record.registration_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}>
+                                        {record.registration_cleared === 'YES' ? 'CLEARED' : 'PENDING'}
                                     </span>
                                 </div>
                             </div>

@@ -53,6 +53,8 @@ export default function AdminDashboard() {
             account_holder: student.account_holder,
             fee_cleared: student.fee_cleared,
             library_cleared: student.library_cleared,
+            scholarship_cleared: student.scholarship_cleared,
+            registration_cleared: student.registration_cleared,
             status: student.status,
         };
 
@@ -110,6 +112,8 @@ export default function AdminDashboard() {
                                 <th>Bank Details</th>
                                 <th>Fee Cleared</th>
                                 <th>Library Cleared</th>
+                                <th>Scholarship Cleared</th>
+                                <th>Registration Cleared</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -147,6 +151,30 @@ export default function AdminDashboard() {
                                             style={{ border: "none", cursor: "pointer", fontSize: 12 }}
                                             value={s.library_cleared}
                                             onChange={(e) => handleChange(i, "library_cleared", e.target.value)}
+                                        >
+                                            <option value="NO">NO</option>
+                                            <option value="YES">YES</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <select
+                                            className={`badge ${s.scholarship_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
+                                            style={{ border: "none", cursor: "pointer", fontSize: 12 }}
+                                            value={s.scholarship_cleared}
+                                            onChange={(e) => handleChange(i, "scholarship_cleared", e.target.value)}
+                                        >
+                                            <option value="NO">NO</option>
+                                            <option value="YES">YES</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <select
+                                            className={`badge ${s.registration_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
+                                            style={{ border: "none", cursor: "pointer", fontSize: 12 }}
+                                            value={s.registration_cleared}
+                                            onChange={(e) => handleChange(i, "registration_cleared", e.target.value)}
                                         >
                                             <option value="NO">NO</option>
                                             <option value="YES">YES</option>
