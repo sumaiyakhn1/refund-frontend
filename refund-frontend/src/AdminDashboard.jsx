@@ -138,7 +138,7 @@ export default function AdminDashboard() {
             <div className="dashboard-header">
                 <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                     <div style={{ background: "#334155", padding: "8px", borderRadius: "8px" }}>
-                        <img src="/rksdlogo.png" alt="Logo" style={{ width: "100px" }} />
+                        <img src="/rksdlogo1.jpeg" alt="RKSD College Logo" style={{ width: "100px" }} />
                     </div>
                     <div>
                         <h2 className="title" style={{ textAlign: "left", marginBottom: 4 }}>
