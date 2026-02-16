@@ -170,6 +170,7 @@ export default function AdminDashboard() {
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Submitted On</th>
                                 <th>Bank Details</th>
                                 <th>Fee Cleared</th>
                                 <th>Library Cleared</th>
@@ -187,6 +188,9 @@ export default function AdminDashboard() {
                                     <td>
                                         <div style={{ fontWeight: 500 }}>{s.student_name}</div>
                                         <div style={{ fontSize: 12, color: "#94a3b8" }}>{s.dob}</div>
+                                    </td>
+                                    <td style={{ fontSize: 13, color: "#64748b", whiteSpace: "nowrap" }}>
+                                        {s.timestamp || s.Timestamp || "-"}
                                     </td>
                                     <td>
                                         <div>{s.bank_name}</div>
