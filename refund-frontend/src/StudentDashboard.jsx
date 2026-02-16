@@ -6,8 +6,12 @@ export default function StudentDashboard() {
 
     const [loading, setLoading] = useState(true);
     const [record, setRecord] = useState(null);
+
+    // Auto-fill form from login details
+    const studentDetails = JSON.parse(localStorage.getItem("student_details") || "{}");
+
     const [form, setForm] = useState({
-        student_name: "",
+        student_name: studentDetails["Student Name"] || "",
         bank_name: "",
         account_no: "",
         ifsc: "",
@@ -97,6 +101,23 @@ export default function StudentDashboard() {
                     </button>
                 </div>
 
+                {/* Student Details Card */}
+                <div className="card" style={{ padding: "20px", marginBottom: "24px", background: "#f8fafc", border: "1px dashed #cbd5e1" }}>
+                    <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#334155", marginBottom: "16px" }}>Student Information</h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+                        {["Registration No", "Student Name", "Fathers Name", "Category", "Student Mobile No"].map((field) => {
+                            const studentDetails = JSON.parse(localStorage.getItem("student_details") || "{}");
+                            const value = studentDetails[field] || studentDetails[field.replace('.', '')] || "N/A";
+                            return (
+                                <div key={field}>
+                                    <label style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: "600" }}>{field}</label>
+                                    <div style={{ fontSize: "14px", fontWeight: "600", color: "#1e293b" }}>{value}</div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
                 <div className="form-group">
                     <div className="card" style={{ padding: 20 }}>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
@@ -180,6 +201,26 @@ export default function StudentDashboard() {
                 </button>
             </div>
 
+            {/* Student Details Card */}
+            <div className="card" style={{ padding: "20px", marginBottom: "24px", background: "#f8fafc", border: "1px dashed #cbd5e1" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#334155", marginBottom: "16px" }}>Student Information</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+                    {["Registration No", "Student Name", "Fathers Name", "Category", "Student Mobile No"].map((field) => {
+                        const studentDetails = JSON.parse(localStorage.getItem("student_details") || "{}");
+                        // Try to match keys somewhat loosely or exact
+                        // The keys in localStorage will match Excel headers exact if pandas read them that way.
+                        // We can display whatever we find.
+                        const value = studentDetails[field] || studentDetails[field.replace('.', '')] || "N/A";
+                        return (
+                            <div key={field}>
+                                <label style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: "600" }}>{field}</label>
+                                <div style={{ fontSize: "14px", fontWeight: "600", color: "#1e293b" }}>{value}</div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
             <form onSubmit={handleSubmit} className="form-group">
                 <div className="input-group">
                     <label>Student ID</label>
@@ -190,9 +231,9 @@ export default function StudentDashboard() {
                     <label>Student Name</label>
                     <input
                         name="student_name"
-                        placeholder="Name as per bank records"
-                        onChange={handleChange}
-                        required
+                        value={form.student_name}
+                        readOnly
+                        style={{ background: "#f1f5f9", cursor: "not-allowed" }}
                     />
                 </div>
 

@@ -3,16 +3,23 @@ import { useState } from "react";
 export default function Login() {
     const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
     const [role, setRole] = useState("student"); // 'student' | 'admin'
+    const [course, setCourse] = useState("");
     const [id, setId] = useState("");
     const [password, setPassword] = useState(""); // DOB or Admin Password
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
 
+    const COURSES = [
+        "b.a", "bcoma ided", "bcom sf", "bsc ele.", "bsc med.",
+        "bsc nm", "bscn nm sf", "bsc cs", "b.voc", "bba",
+        "bca", "eng", "hindi", "pol.sc.", "msc maths", "YOGA"
+    ];
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setMessage("");
 
-        if (!id || !password) {
+        if (!id || !password || (role === 'student' && !course)) {
             alert("Please enter all fields");
             return;
         }
@@ -29,6 +36,7 @@ export default function Login() {
                 body: JSON.stringify({
                     id: id,
                     password: password,
+                    course: role === 'student' ? course : null
                 }),
             });
 
@@ -52,6 +60,9 @@ export default function Login() {
             if (data.role === "student") {
                 localStorage.setItem("role", "student");
                 localStorage.setItem("student_id", data.student_id);
+                if (data.student_details) {
+                    localStorage.setItem("student_details", JSON.stringify(data.student_details));
+                }
                 setMessage(`✅ Welcome, ${data.student_id}`);
                 setTimeout(() => window.location.reload(), 1000);
             } else if (data.role === "admin") {
@@ -112,34 +123,59 @@ export default function Login() {
                 <div className="tabs">
                     <div
                         className={`tab ${role === 'student' ? 'active' : ''}`}
-                        onClick={() => { setRole('student'); setMessage(""); setId(""); setPassword(""); }}
+                        onClick={() => { setRole('student'); setMessage(""); setId(""); setPassword(""); setCourse(""); }}
                     >
                         Student Login
                     </div>
                     <div
                         className={`tab ${role === 'admin' ? 'active' : ''}`}
-                        onClick={() => { setRole('admin'); setMessage(""); setId(""); setPassword(""); }}
+                        onClick={() => { setRole('admin'); setMessage(""); setId(""); setPassword(""); setCourse(""); }}
                     >
                         Admin Login
                     </div>
                 </div>
 
                 <form onSubmit={handleLogin} className="form-group">
+                    {role === 'student' && (
+                        <div className="input-group">
+                            <label>Class / Course</label>
+                            <select
+                                value={course}
+                                onChange={(e) => setCourse(e.target.value)}
+                                style={{
+                                    width: "100%",
+                                    padding: "12px",
+                                    border: "1px solid #cbd5e1",
+                                    borderRadius: "8px",
+                                    fontSize: "14px",
+                                    color: "#334155",
+                                    outline: "none",
+                                    background: "#fff"
+                                }}
+                            >
+                                <option value="">Select your course</option>
+                                {COURSES.map(c => (
+                                    <option key={c} value={c}>{c.toUpperCase()}</option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
                     <div className="input-group">
                         <label>{role === 'admin' ? 'Admin Username' : 'Registration Number'}</label>
                         <input
                             placeholder={role === 'admin' ? 'e.g. admin' : 'e.g. REG2024001'}
                             value={id}
                             onChange={(e) => setId(e.target.value)}
-                            autoFocus
+                        // Autofocus only if this field is empty to be polite
                         />
                     </div>
 
                     <div className="input-group">
-                        <label>{role === 'admin' ? 'Password' : 'Date of Birth'}</label>
+                        <label>Password</label>
                         <input
-                            type={role === 'admin' ? 'password' : 'text'}
-                            placeholder={role === 'admin' ? 'Enter password' : 'DD-MM-YYYY'}
+                            type="password"
+                            placeholder="Enter password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
