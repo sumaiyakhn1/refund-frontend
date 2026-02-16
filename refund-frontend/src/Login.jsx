@@ -72,76 +72,103 @@ export default function Login() {
     };
 
     return (
-        <div className="wrapper">
-            <div style={{ textAlign: "center", marginBottom: "32px" }}>
-                <div style={{ background: "#334155", padding: "12px", borderRadius: "12px", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "24px" }}>
+        <>
+            <div className="wrapper">
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "45px",
+                    marginBottom: "32px",
+                    borderBottom: "1px solid #f1f5f9",
+                    paddingBottom: "24px",
+                    textAlign: "left"
+                }}>
                     <img
                         src="/rksdlogo1.jpeg"
                         alt="Logo"
-                        style={{ width: "180px" }}
+                        style={{ width: "120px", height: "auto" }}
                     />
+                    <div>
+                        <h1 style={{ margin: 0, fontSize: "32px", fontWeight: "900", color: "#1e293b", textTransform: "uppercase", lineHeight: "1.1", letterSpacing: "0.5px" }}>
+                            R.K.S.D. College
+                        </h1>
+                        <h2 style={{ margin: "6px 0 0 0", fontSize: "16px", fontWeight: "700", color: "#64748b", letterSpacing: "3px", textTransform: "uppercase" }}>
+                            Kaithal, Haryana
+                        </h2>
+                    </div>
                 </div>
-                <div>
-                    <h2 style={{ margin: 0, fontSize: "24px", fontWeight: "700", color: "#334155" }}>
+
+                <div style={{ textAlign: "center", marginBottom: "32px" }}>
+                    <h3 style={{ margin: 0, fontSize: "22px", fontWeight: "700", color: "#1e293b" }}>
                         {role === 'admin' ? 'Admin Portal' : 'Student Portal'}
-                    </h2>
-                    <p style={{ margin: 0, fontSize: "16px", color: "#64748b" }}>
+                    </h3>
+                    <p style={{ margin: "8px 0 0 0", fontSize: "15px", color: "#64748b" }}>
                         Sign in to manage your refund applications
                     </p>
                 </div>
+
+                {/* TAB SYSTEM */}
+                <div className="tabs">
+                    <div
+                        className={`tab ${role === 'student' ? 'active' : ''}`}
+                        onClick={() => { setRole('student'); setMessage(""); setId(""); setPassword(""); }}
+                    >
+                        Student Login
+                    </div>
+                    <div
+                        className={`tab ${role === 'admin' ? 'active' : ''}`}
+                        onClick={() => { setRole('admin'); setMessage(""); setId(""); setPassword(""); }}
+                    >
+                        Admin Login
+                    </div>
+                </div>
+
+                <form onSubmit={handleLogin} className="form-group">
+                    <div className="input-group">
+                        <label>{role === 'admin' ? 'Admin Username' : 'Registration Number'}</label>
+                        <input
+                            placeholder={role === 'admin' ? 'e.g. admin' : 'e.g. REG2024001'}
+                            value={id}
+                            onChange={(e) => setId(e.target.value)}
+                            autoFocus
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>{role === 'admin' ? 'Password' : 'Date of Birth'}</label>
+                        <input
+                            type={role === 'admin' ? 'password' : 'text'}
+                            placeholder={role === 'admin' ? 'Enter password' : 'DD-MM-YYYY'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Authenticating..." : `Sign In as ${role === 'admin' ? 'Admin' : 'Student'}`}
+                    </button>
+                </form>
+
+                <div style={{ marginTop: 32, textAlign: "center", fontSize: 12, color: "#94a3b8" }}>
+                    <span>Crafted with ❤️ by <b>Okie Dokie</b></span>
+                </div>
+
+                {message && (
+                    <div className={`alert ${message.startsWith('✅') ? 'alert-success' : 'alert-error'}`}>
+                        {message}
+                    </div>
+                )}
             </div>
 
-            {/* TAB SYSTEM */}
-            <div className="tabs">
-                <div
-                    className={`tab ${role === 'student' ? 'active' : ''}`}
-                    onClick={() => { setRole('student'); setMessage(""); setId(""); setPassword(""); }}
-                >
-                    Student Login
-                </div>
-                <div
-                    className={`tab ${role === 'admin' ? 'active' : ''}`}
-                    onClick={() => { setRole('admin'); setMessage(""); setId(""); setPassword(""); }}
-                >
-                    Admin Login
-                </div>
+            <div style={{ position: "fixed", bottom: 20, right: 20, display: "flex", alignItems: "center", gap: 8, opacity: 0.8, zIndex: 100 }}>
+                <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>Partner</span>
+                <img
+                    src="https://okiedokie-erp-images.s3.ap-south-1.amazonaws.com/Okie%20Dokie/2025/12/sourceURL/26aebcbe10f4ac5a3e8b-611ed1b9032568edd4f3-Okie_Dokie_App_icon__2___2_-removebg-preview.png"
+                    alt="Okie Dokie"
+                    style={{ height: "24px", width: "auto" }}
+                />
             </div>
-
-            <form onSubmit={handleLogin} className="form-group">
-                <div className="input-group">
-                    <label>{role === 'admin' ? 'Admin Username' : 'Registration Number'}</label>
-                    <input
-                        placeholder={role === 'admin' ? 'e.g. admin' : 'e.g. REG2024001'}
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
-                        autoFocus
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>{role === 'admin' ? 'Password' : 'Date of Birth'}</label>
-                    <input
-                        type={role === 'admin' ? 'password' : 'text'}
-                        placeholder={role === 'admin' ? 'Enter password' : 'DD-MM-YYYY'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-
-                <button type="submit" disabled={loading}>
-                    {loading ? "Authenticating..." : `Sign In as ${role === 'admin' ? 'Admin' : 'Student'}`}
-                </button>
-            </form>
-
-            <div style={{ marginTop: 32, textAlign: "center", fontSize: 12, color: "#94a3b8" }}>
-                <span>Crafted with ❤️ by <b>Okie Dokie</b></span>
-            </div>
-
-            {message && (
-                <div className={`alert ${message.startsWith('✅') ? 'alert-success' : 'alert-error'}`}>
-                    {message}
-                </div>
-            )}
-        </div>
+        </>
     );
 }
