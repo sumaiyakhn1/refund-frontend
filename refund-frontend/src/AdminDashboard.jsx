@@ -5,9 +5,26 @@ export default function AdminDashboard() {
     const [students, setStudents] = useState([]);
     const [msg, setMsg] = useState("");
 
+    // Get role and permissions
+    const role = localStorage.getItem("role");
+    const adminId = localStorage.getItem("admin_id");
+
+    let permissions = "all";
+    try {
+        permissions = JSON.parse(localStorage.getItem("permissions"));
+    } catch (e) {
+        permissions = "all"; // Fallback
+    }
+
     const handleLogout = () => {
         localStorage.clear();
         window.location.reload();
+    };
+
+    // Helper: Check if user can edit a specific field
+    const canEdit = (field) => {
+        if (permissions === "all") return true;
+        return permissions === field;
     };
 
     // Load all students
@@ -36,7 +53,44 @@ export default function AdminDashboard() {
 
     const handleChange = (index, field, value) => {
         const updated = [...students];
-        updated[index] = { ...updated[index], [field]: value };
+        const student = { ...updated[index], [field]: value };
+
+        // ================= AUTOMATIC STATUS LOGIC =================
+        // Logic: 
+        // 1. If ALL 4 clearances are "YES" -> Status "APPROVED"
+        // 2. If ANY is "NO" -> Status "PENDING"
+        // 3. Exception: If status is manually set to "REJECTED", keep it? 
+        //    Current Requirement: "logic if all is false then pending if all true accepted"
+        //    Let's enforce: Auto-logic overrides Pending/Approved. Rejected is sticky unless all YES?
+        //    Simpler: Just calculate it based on clearance.
+
+        // Only run this logic if we are editing a clearance field
+        const clearanceFields = ["fee_cleared", "library_cleared", "scholarship_cleared", "registration_cleared"];
+
+        if (clearanceFields.includes(field)) {
+            const allYes =
+                student.fee_cleared === "YES" &&
+                student.library_cleared === "YES" &&
+                student.scholarship_cleared === "YES" &&
+                student.registration_cleared === "YES";
+
+            if (allYes) {
+                student.status = "APPROVED";
+            } else {
+                // If it was APPROVED, move back to PENDING. 
+                // If it was REJECTED, user might want to keep it rejected?
+                // Requirement said "if all is false then pending". 
+                // Let's assume if not all YES and not REJECTED, it should be PENDING.
+                // Or maybe even if REJECTED, if we fix a clearance, should it go to pending?
+                // Safest bet for "Auto": 
+                if (student.status !== "REJECTED") {
+                    student.status = "PENDING";
+                }
+            }
+        }
+
+        // Update the array
+        updated[index] = student;
         setStudents(updated);
     };
 
@@ -87,9 +141,11 @@ export default function AdminDashboard() {
                         <img src="/rksdlogo.png" alt="Logo" style={{ width: "100px" }} />
                     </div>
                     <div>
-                        <h2 className="title" style={{ textAlign: "left", marginBottom: 4 }}>Admin Dashboard</h2>
+                        <h2 className="title" style={{ textAlign: "left", marginBottom: 4 }}>
+                            Admin Dashboard ({adminId})
+                        </h2>
                         <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
-                            Manage student applications and refunds
+                            {permissions === 'all' ? 'Super Admin Access' : `Role: ${permissions}`}
                         </p>
                     </div>
                 </div>
@@ -141,9 +197,10 @@ export default function AdminDashboard() {
                                     <td>
                                         <select
                                             className={`badge ${s.fee_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: "pointer", fontSize: 12 }}
+                                            style={{ border: "none", cursor: canEdit('fee_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('fee_cleared') ? 1 : 0.6 }}
                                             value={s.fee_cleared}
                                             onChange={(e) => handleChange(i, "fee_cleared", e.target.value)}
+                                            disabled={!canEdit('fee_cleared')}
                                         >
                                             <option value="NO">NO</option>
                                             <option value="YES">YES</option>
@@ -153,9 +210,10 @@ export default function AdminDashboard() {
                                     <td>
                                         <select
                                             className={`badge ${s.library_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: "pointer", fontSize: 12 }}
+                                            style={{ border: "none", cursor: canEdit('library_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('library_cleared') ? 1 : 0.6 }}
                                             value={s.library_cleared}
                                             onChange={(e) => handleChange(i, "library_cleared", e.target.value)}
+                                            disabled={!canEdit('library_cleared')}
                                         >
                                             <option value="NO">NO</option>
                                             <option value="YES">YES</option>
@@ -165,9 +223,10 @@ export default function AdminDashboard() {
                                     <td>
                                         <select
                                             className={`badge ${s.scholarship_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: "pointer", fontSize: 12 }}
+                                            style={{ border: "none", cursor: canEdit('scholarship_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('scholarship_cleared') ? 1 : 0.6 }}
                                             value={s.scholarship_cleared}
                                             onChange={(e) => handleChange(i, "scholarship_cleared", e.target.value)}
+                                            disabled={!canEdit('scholarship_cleared')}
                                         >
                                             <option value="NO">NO</option>
                                             <option value="YES">YES</option>
@@ -177,9 +236,10 @@ export default function AdminDashboard() {
                                     <td>
                                         <select
                                             className={`badge ${s.registration_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: "pointer", fontSize: 12 }}
+                                            style={{ border: "none", cursor: canEdit('registration_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('registration_cleared') ? 1 : 0.6 }}
                                             value={s.registration_cleared}
                                             onChange={(e) => handleChange(i, "registration_cleared", e.target.value)}
+                                            disabled={!canEdit('registration_cleared')}
                                         >
                                             <option value="NO">NO</option>
                                             <option value="YES">YES</option>
@@ -188,9 +248,17 @@ export default function AdminDashboard() {
 
                                     <td>
                                         <select
-                                            style={{ padding: "6px", borderRadius: 6, fontSize: 12, fontWeight: 600 }}
+                                            style={{
+                                                padding: "6px",
+                                                borderRadius: 6,
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                cursor: canEdit('all') ? "pointer" : "not-allowed",
+                                                opacity: canEdit('all') ? 1 : 0.7
+                                            }}
                                             value={s.status}
                                             onChange={(e) => handleChange(i, "status", e.target.value)}
+                                            disabled={!canEdit('all')}
                                         >
                                             <option value="PENDING">PENDING</option>
                                             <option value="APPROVED">APPROVED</option>

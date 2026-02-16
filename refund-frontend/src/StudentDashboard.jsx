@@ -83,7 +83,7 @@ export default function StudentDashboard() {
                 <div className="dashboard-header">
                     <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                         <div style={{ background: "#334155", padding: "8px", borderRadius: "8px" }}>
-                            <img src="/rksdlogo.png" alt="Logo" style={{ width: "100px" }} />
+                            <img src="/rksdlogo1.jpeg" alt="Logo" style={{ width: "100px" }} />
                         </div>
                         <div>
                             <h2 className="title" style={{ textAlign: "left", marginBottom: 0 }}>Application Status</h2>
@@ -166,7 +166,7 @@ export default function StudentDashboard() {
             <div className="dashboard-header">
                 <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                     <div style={{ background: "#334155", padding: "8px", borderRadius: "8px" }}>
-                        <img src="/rksdlogo.png" alt="Logo" style={{ width: "100px" }} />
+                        <img src="/rksdlogo1.jpeg" alt="Logo" style={{ width: "100px" }} />
                     </div>
                     <div>
                         <h2 className="title" style={{ textAlign: "left", marginBottom: 0 }}>Refund Application</h2>

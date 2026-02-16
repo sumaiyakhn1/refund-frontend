@@ -57,6 +57,9 @@ export default function Login() {
             } else if (data.role === "admin") {
                 localStorage.setItem("role", "admin");
                 localStorage.setItem("admin_id", data.admin_id);
+                // Store permissions if available, else default to 'all' (backward compatibility)
+                localStorage.setItem("permissions", JSON.stringify(data.permissions || "all"));
+
                 setMessage("✅ Welcome Admin");
                 setTimeout(() => window.location.reload(), 1000);
             }
@@ -73,7 +76,7 @@ export default function Login() {
             <div style={{ textAlign: "center", marginBottom: "32px" }}>
                 <div style={{ background: "#334155", padding: "12px", borderRadius: "12px", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "24px" }}>
                     <img
-                        src="/rksdlogo.png"
+                        src="/rksdlogo1.jpeg"
                         alt="Logo"
                         style={{ width: "180px" }}
                     />
