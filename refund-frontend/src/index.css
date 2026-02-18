@@ -260,6 +260,11 @@ tr:last-child td {
     color: #991b1b;
 }
 
+.badge-orange {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
 /* UTILS */
 .text-center {
     text-align: center;

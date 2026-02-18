@@ -133,6 +133,23 @@ export default function AdminDashboard() {
         }
     };
 
+    const getRowTint = (student) => {
+        const clearances = [
+            student.fee_cleared,
+            student.library_cleared,
+            student.scholarship_cleared,
+            student.registration_cleared
+        ];
+
+        const allYes = clearances.every(c => c === "YES");
+        const allNo = clearances.every(c => c === "NO");
+
+        // using level 50 tints for very subtle visibility
+        if (allYes) return "#f0fdf4";
+        if (allNo) return "#fef2f2";
+        return "#fff7ed";
+    };
+
     return (
         <div className="admin-wrapper">
             <div className="dashboard-header">
@@ -183,7 +200,7 @@ export default function AdminDashboard() {
 
                         <tbody>
                             {students.map((s, i) => (
-                                <tr key={s.student_id}>
+                                <tr key={s.student_id} style={{ backgroundColor: getRowTint(s) }}>
                                     <td style={{ fontWeight: 600 }}>{s.student_id}</td>
                                     <td>
                                         <div style={{ fontWeight: 500 }}>{s.student_name}</div>
@@ -252,13 +269,17 @@ export default function AdminDashboard() {
 
                                     <td>
                                         <select
+                                            className={`badge ${s.status === 'APPROVED' ? 'badge-green' :
+                                                s.status === 'REJECTED' ? 'badge-red' : 'badge-orange'
+                                                }`}
                                             style={{
                                                 padding: "6px",
                                                 borderRadius: 6,
                                                 fontSize: 12,
                                                 fontWeight: 600,
                                                 cursor: canEdit('all') ? "pointer" : "not-allowed",
-                                                opacity: canEdit('all') ? 1 : 0.7
+                                                opacity: canEdit('all') ? 1 : 0.7,
+                                                border: "none"
                                             }}
                                             value={s.status}
                                             onChange={(e) => handleChange(i, "status", e.target.value)}
