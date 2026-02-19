@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import StudentDetailModal from "./StudentDetailModal";
 
 export default function AdminDashboard() {
     const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
     const [students, setStudents] = useState([]);
     const [msg, setMsg] = useState("");
+    const [selectedStudentId, setSelectedStudentId] = useState(null);
 
     // Get role and permissions
     const role = localStorage.getItem("role");
@@ -216,87 +218,60 @@ export default function AdminDashboard() {
                                     </td>
 
                                     <td>
-                                        <select
+                                        <div
                                             className={`badge ${s.fee_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: canEdit('fee_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('fee_cleared') ? 1 : 0.6 }}
-                                            value={s.fee_cleared}
-                                            onChange={(e) => handleChange(i, "fee_cleared", e.target.value)}
-                                            disabled={!canEdit('fee_cleared')}
+                                            onClick={() => setSelectedStudentId(s.student_id)}
+                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
                                         >
-                                            <option value="NO">NO</option>
-                                            <option value="YES">YES</option>
-                                        </select>
+                                            {s.fee_cleared}
+                                        </div>
                                     </td>
 
                                     <td>
-                                        <select
+                                        <div
                                             className={`badge ${s.library_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: canEdit('library_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('library_cleared') ? 1 : 0.6 }}
-                                            value={s.library_cleared}
-                                            onChange={(e) => handleChange(i, "library_cleared", e.target.value)}
-                                            disabled={!canEdit('library_cleared')}
+                                            onClick={() => setSelectedStudentId(s.student_id)}
+                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
                                         >
-                                            <option value="NO">NO</option>
-                                            <option value="YES">YES</option>
-                                        </select>
+                                            {s.library_cleared}
+                                        </div>
                                     </td>
 
                                     <td>
-                                        <select
+                                        <div
                                             className={`badge ${s.scholarship_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: canEdit('scholarship_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('scholarship_cleared') ? 1 : 0.6 }}
-                                            value={s.scholarship_cleared}
-                                            onChange={(e) => handleChange(i, "scholarship_cleared", e.target.value)}
-                                            disabled={!canEdit('scholarship_cleared')}
+                                            onClick={() => setSelectedStudentId(s.student_id)}
+                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
                                         >
-                                            <option value="NO">NO</option>
-                                            <option value="YES">YES</option>
-                                        </select>
+                                            {s.scholarship_cleared}
+                                        </div>
                                     </td>
 
                                     <td>
-                                        <select
+                                        <div
                                             className={`badge ${s.registration_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
-                                            style={{ border: "none", cursor: canEdit('registration_cleared') ? "pointer" : "not-allowed", fontSize: 12, opacity: canEdit('registration_cleared') ? 1 : 0.6 }}
-                                            value={s.registration_cleared}
-                                            onChange={(e) => handleChange(i, "registration_cleared", e.target.value)}
-                                            disabled={!canEdit('registration_cleared')}
+                                            onClick={() => setSelectedStudentId(s.student_id)}
+                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
                                         >
-                                            <option value="NO">NO</option>
-                                            <option value="YES">YES</option>
-                                        </select>
+                                            {s.registration_cleared}
+                                        </div>
                                     </td>
 
                                     <td>
-                                        <select
-                                            className={`badge ${s.status === 'APPROVED' ? 'badge-green' :
-                                                s.status === 'REJECTED' ? 'badge-red' : 'badge-orange'
-                                                }`}
-                                            style={{
-                                                padding: "6px",
-                                                borderRadius: 6,
-                                                fontSize: 12,
-                                                fontWeight: 600,
-                                                cursor: canEdit('all') ? "pointer" : "not-allowed",
-                                                opacity: canEdit('all') ? 1 : 0.7,
-                                                border: "none"
-                                            }}
-                                            value={s.status}
-                                            onChange={(e) => handleChange(i, "status", e.target.value)}
-                                            disabled={!canEdit('all')}
+                                        <div
+                                            className={`badge ${s.status === 'APPROVED' ? 'badge-green' : s.status === 'REJECTED' ? 'badge-red' : 'badge-orange'}`}
+                                            style={{ padding: "6px", borderRadius: 6, fontSize: 12, fontWeight: 600, textAlign: "center" }}
                                         >
-                                            <option value="PENDING">PENDING</option>
-                                            <option value="APPROVED">APPROVED</option>
-                                            <option value="REJECTED">REJECTED</option>
-                                        </select>
+                                            {s.status}
+                                        </div>
                                     </td>
 
-                                    <td>
+                                    <td style={{ display: "flex", gap: "5px", flexDirection: "column" }}>
                                         <button
-                                            onClick={() => handleSave(s)}
-                                            style={{ padding: "8px 16px", fontSize: 12 }}
+                                            onClick={() => setSelectedStudentId(s.student_id)}
+                                            style={{ padding: "8px 16px", fontSize: 12, background: "#3b82f6", color: "white" }}
                                         >
-                                            Save
+                                            View & Action
                                         </button>
                                     </td>
                                 </tr>
@@ -305,6 +280,19 @@ export default function AdminDashboard() {
                     </table>
                 </div>
             </div>
+            {selectedStudentId && (
+                <StudentDetailModal
+                    studentId={selectedStudentId}
+                    currentStudent={students.find(s => s.student_id === selectedStudentId)}
+                    permissions={permissions}
+                    onUpdate={(field, value) => {
+                        const index = students.findIndex(s => s.student_id === selectedStudentId);
+                        if (index !== -1) handleChange(index, field, value);
+                    }}
+                    onSave={handleSave}
+                    onClose={() => setSelectedStudentId(null)}
+                />
+            )}
         </div>
     );
 }
