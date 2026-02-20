@@ -6,6 +6,14 @@ export default function AdminDashboard() {
     const [students, setStudents] = useState([]);
     const [msg, setMsg] = useState("");
     const [selectedStudentId, setSelectedStudentId] = useState(null);
+    const [statusFilter, setStatusFilter] = useState("ALL");
+
+    const filteredStudents = students.filter(s => {
+        if (statusFilter === "ALL") return true;
+        const sStatus = s.status ? s.status.toUpperCase() : "";
+        if (statusFilter === "CLEARED") return sStatus === "APPROVED" || sStatus === "CLEARED";
+        return sStatus === statusFilter;
+    });
 
     // Get role and permissions
     const role = localStorage.getItem("role");
@@ -195,13 +203,32 @@ export default function AdminDashboard() {
                                 <th className="text-center">Library</th>
                                 <th className="text-center">Scholarship</th>
                                 <th className="text-center">Registration</th>
-                                <th className="text-center">Status</th>
+                                <th className="text-center">
+                                    <select
+                                        value={statusFilter}
+                                        onChange={(e) => setStatusFilter(e.target.value)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        style={{
+                                            padding: "4px", borderRadius: "4px", border: "none",
+                                            background: "transparent", fontWeight: "700",
+                                            color: "#64748b", fontSize: "11px", textTransform: "uppercase",
+                                            cursor: "pointer",
+                                            minWidth: "100px",
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <option value="ALL">STATUS (ALL)</option>
+                                        <option value="PENDING">PENDING</option>
+                                        <option value="CLEARED">CLEARED</option>
+                                        <option value="REJECTED">REJECTED</option>
+                                    </select>
+                                </th>
                                 <th className="text-center">Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {students.map((s, i) => (
+                            {filteredStudents.map((s, i) => (
                                 <tr key={s.student_id} style={{ backgroundColor: getRowTint(s) }}>
                                     <td style={{ fontWeight: 600 }}>{s.student_id}</td>
                                     <td style={{ fontSize: 13, color: "#64748b", whiteSpace: "nowrap" }}>
