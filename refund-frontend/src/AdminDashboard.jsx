@@ -160,10 +160,10 @@ export default function AdminDashboard() {
                         <img src="/rksdlogo1.jpeg" alt="RKSD College Logo" style={{ width: "100px" }} />
                     </div>
                     <div>
-                        <h2 className="title" style={{ textAlign: "left", marginBottom: 4 }}>
+                        <h2 className="title" style={{ textAlign: "left", marginBottom: 4, color: "white" }}>
                             Admin Dashboard ({adminId})
                         </h2>
-                        <p className="subtitle" style={{ textAlign: "left", marginBottom: 0 }}>
+                        <p className="subtitle" style={{ textAlign: "left", marginBottom: 0, color: "white" }}>
                             {permissions === 'all' ? 'Super Admin Access' : `Role: ${permissions}`}
                         </p>
                     </div>
@@ -188,15 +188,15 @@ export default function AdminDashboard() {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
                                 <th>Submitted On</th>
+                                <th>Name</th>
                                 <th>Bank Details</th>
-                                <th>Fee Cleared</th>
-                                <th>Library Cleared</th>
-                                <th>Scholarship Cleared</th>
-                                <th>Registration Cleared</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th className="text-center">Fee</th>
+                                <th className="text-center">Library</th>
+                                <th className="text-center">Scholarship</th>
+                                <th className="text-center">Registration</th>
+                                <th className="text-center">Status</th>
+                                <th className="text-center">Action</th>
                             </tr>
                         </thead>
 
@@ -204,12 +204,12 @@ export default function AdminDashboard() {
                             {students.map((s, i) => (
                                 <tr key={s.student_id} style={{ backgroundColor: getRowTint(s) }}>
                                     <td style={{ fontWeight: 600 }}>{s.student_id}</td>
+                                    <td style={{ fontSize: 13, color: "#64748b", whiteSpace: "nowrap" }}>
+                                        {s.timestamp || s.Timestamp || "-"}
+                                    </td>
                                     <td>
                                         <div style={{ fontWeight: 500 }}>{s.student_name}</div>
                                         <div style={{ fontSize: 12, color: "#94a3b8" }}>{s.dob}</div>
-                                    </td>
-                                    <td style={{ fontSize: 13, color: "#64748b", whiteSpace: "nowrap" }}>
-                                        {s.timestamp || s.Timestamp || "-"}
                                     </td>
                                     <td>
                                         <div>{s.bank_name}</div>
@@ -217,59 +217,59 @@ export default function AdminDashboard() {
                                         <div style={{ fontSize: 11, color: "#94a3b8" }}>{s.ifsc}</div>
                                     </td>
 
-                                    <td>
+                                    <td className="text-center">
                                         <div
                                             className={`badge ${s.fee_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
                                             onClick={() => setSelectedStudentId(s.student_id)}
-                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
+                                            style={{ cursor: "pointer", justifyContent: "center", minWidth: "80px" }}
                                         >
                                             {s.fee_cleared}
                                         </div>
                                     </td>
 
-                                    <td>
+                                    <td className="text-center">
                                         <div
                                             className={`badge ${s.library_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
                                             onClick={() => setSelectedStudentId(s.student_id)}
-                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
+                                            style={{ cursor: "pointer", justifyContent: "center", minWidth: "80px" }}
                                         >
                                             {s.library_cleared}
                                         </div>
                                     </td>
 
-                                    <td>
+                                    <td className="text-center">
                                         <div
                                             className={`badge ${s.scholarship_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
                                             onClick={() => setSelectedStudentId(s.student_id)}
-                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
+                                            style={{ cursor: "pointer", justifyContent: "center", minWidth: "80px" }}
                                         >
                                             {s.scholarship_cleared}
                                         </div>
                                     </td>
 
-                                    <td>
+                                    <td className="text-center">
                                         <div
                                             className={`badge ${s.registration_cleared === 'YES' ? 'badge-green' : 'badge-red'}`}
                                             onClick={() => setSelectedStudentId(s.student_id)}
-                                            style={{ cursor: "pointer", textAlign: "center", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}
+                                            style={{ cursor: "pointer", justifyContent: "center", minWidth: "80px" }}
                                         >
                                             {s.registration_cleared}
                                         </div>
                                     </td>
 
-                                    <td>
+                                    <td className="text-center">
                                         <div
                                             className={`badge ${s.status === 'APPROVED' ? 'badge-green' : s.status === 'REJECTED' ? 'badge-red' : 'badge-orange'}`}
-                                            style={{ padding: "6px", borderRadius: 6, fontSize: 12, fontWeight: 600, textAlign: "center" }}
+                                            style={{ padding: "6px", borderRadius: 6, fontSize: 12, fontWeight: 600, justifyContent: "center", minWidth: "100px" }}
                                         >
                                             {s.status}
                                         </div>
                                     </td>
 
-                                    <td style={{ display: "flex", gap: "5px", flexDirection: "column" }}>
+                                    <td className="text-center">
                                         <button
                                             onClick={() => setSelectedStudentId(s.student_id)}
-                                            style={{ padding: "8px 16px", fontSize: 12, background: "#3b82f6", color: "white" }}
+                                            style={{ padding: "8px 16px", fontSize: 12, background: "#3b82f6", color: "white", minWidth: "120px" }}
                                         >
                                             View & Action
                                         </button>
