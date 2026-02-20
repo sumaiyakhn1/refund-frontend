@@ -30,3 +30,17 @@ export const checkStudentDues = async (studentMongoId) => {
         throw error;
     }
 };
+
+export const getLibraryBookCount = async (studentMongoId) => {
+    try {
+        const response = await api.get('https://api.odpay.in/api/checkIssuedRecordsCount/libraryBook', {
+            params: {
+                id: studentMongoId
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching library book count:", error);
+        throw error;
+    }
+};

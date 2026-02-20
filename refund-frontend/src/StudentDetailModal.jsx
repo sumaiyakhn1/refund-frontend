@@ -1,9 +1,11 @@
+
 import { useEffect, useState } from 'react';
-import { getStudentDetails, checkStudentDues } from './services/studentService';
+import { getStudentDetails, checkStudentDues, getLibraryBookCount } from './services/studentService';
 
 export default function StudentDetailModal({ studentId, currentStudent, onUpdate, onSave, permissions, onClose }) {
     const [details, setDetails] = useState(null);
     const [dues, setDues] = useState(null);
+    const [libraryCount, setLibraryCount] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -14,11 +16,17 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                 .then(data => {
                     setDetails(data);
                     const mongoId = data._id || data.id;
-                    if (mongoId) return checkStudentDues(mongoId);
-                    return null;
+                    if (mongoId) {
+                        return Promise.all([
+                            checkStudentDues(mongoId),
+                            getLibraryBookCount(mongoId)
+                        ]);
+                    }
+                    return [null, null];
                 })
-                .then(dueData => {
+                .then(([dueData, libraryData]) => {
                     if (dueData) setDues(dueData.dueDetails);
+                    if (libraryData) setLibraryCount(libraryData.count);
                     setLoading(false);
                 })
                 .catch(err => {
@@ -41,7 +49,7 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                 <div className="spinner" style={{ width: "20px", height: "20px", border: "3px solid #e2e8f0", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
                 <span style={{ fontWeight: 600, color: "#64748b" }}>Loading Student Profile...</span>
             </div>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } } `}</style>
         </Overlay>
     );
 
@@ -113,7 +121,7 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                             <InfoItem label="Phone" value={details.phone} />
                             <InfoItem label="Email" value={details.email} />
                             <InfoItem label="Stream" value={details.stream} />
-                            <InfoItem label="Class / Section" value={`${details.batch || ""} ${details.section ? `(Sec ${details.section})` : ""}`} />
+                            <InfoItem label="Class / Section" value={`${details.batch || ""} ${details.section ? `(Sec ${details.section})` : ""} `} />
                         </Grid>
                     </Section>
 
@@ -124,11 +132,11 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                                 background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "10px", padding: "20px"
                             }}>
                                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: "20px" }}>
-                                    <FeeItem label="Total Demand" value={`₹${dues.demand}`} />
-                                    <FeeItem label="Concession" value={`₹${dues.concession}`} color="#16a34a" />
-                                    <FeeItem label="Payable" value={`₹${dues.payable}`} bold />
-                                    <FeeItem label="Received" value={`₹${dues.received}`} />
-                                    <FeeItem label="Due Amount" value={`₹${dues.dueAmount}`} color={dues.dueAmount > 0 ? "#dc2626" : "#16a34a"} bold />
+                                    <FeeItem label="Total Demand" value={`₹${dues.demand} `} />
+                                    <FeeItem label="Concession" value={`₹${dues.concession} `} color="#16a34a" />
+                                    <FeeItem label="Payable" value={`₹${dues.payable} `} bold />
+                                    <FeeItem label="Received" value={`₹${dues.received} `} />
+                                    <FeeItem label="Due Amount" value={`₹${dues.dueAmount} `} color={dues.dueAmount > 0 ? "#dc2626" : "#16a34a"} bold />
 
                                     <div style={{ display: "flex", flexDirection: "column" }}>
                                         <span style={{ fontSize: "11px", color: "#64748b", fontWeight: "600", textTransform: "uppercase" }}>Status</span>
@@ -138,6 +146,29 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                                             marginTop: "4px"
                                         }}>
                                             {dues.dueAmount > 0 ? "⚠️ Pending" : "✅ Cleared"}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </Section>
+                    )}
+
+                    {/* Section: Library Status */}
+                    {libraryCount !== null && (
+                        <Section title="Library Status">
+                            <div style={{
+                                background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "10px", padding: "20px"
+                            }}>
+                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: "20px" }}>
+                                    <FeeItem label="Books Issued" value={libraryCount} bold />
+                                    <div style={{ display: "flex", flexDirection: "column" }}>
+                                        <span style={{ fontSize: "11px", color: "#64748b", fontWeight: "600", textTransform: "uppercase" }}>Status</span>
+                                        <span style={{
+                                            fontWeight: "700", fontSize: "15px",
+                                            color: libraryCount > 0 ? "#dc2626" : "#16a34a",
+                                            marginTop: "4px"
+                                        }}>
+                                            {libraryCount > 0 ? "⚠️ Pending Return" : "✅ Clear"}
                                         </span>
                                     </div>
                                 </div>
@@ -168,7 +199,7 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                                                         disabled={!canEdit}
                                                         style={{
                                                             padding: "6px 24px 6px 12px", borderRadius: "6px",
-                                                            border: `1px solid ${value === 'YES' ? '#86efac' : '#fca5a5'}`,
+                                                            border: `1px solid ${value === 'YES' ? '#86efac' : '#fca5a5'} `,
                                                             background: value === 'YES' ? '#f0fdf4' : '#fef2f2',
                                                             color: value === 'YES' ? '#166534' : '#991b1b',
                                                             fontWeight: "600", fontSize: "13px",
@@ -225,7 +256,7 @@ const Overlay = ({ children, onClose }) => (
     }}>
         {children}
         <GlobalStyles />
-        <style>{`@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }`}</style>
+        <style>{`@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } `}</style>
     </div>
 );
 
