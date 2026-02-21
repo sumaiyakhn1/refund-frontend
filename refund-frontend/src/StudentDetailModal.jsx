@@ -97,7 +97,7 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                         </div>
                         <div>
                             <h2 style={{ margin: 0, color: "#0f172a", fontSize: "20px", fontWeight: "700", letterSpacing: "-0.5px" }}>{details.name}</h2>
-                            <span style={{ fontSize: "13px", color: "#64748b", fontWeight: "500", background: "#e0f2fe", color: "#0369a1", padding: "2px 8px", borderRadius: "4px" }}>
+                            <span style={{ fontSize: "13px", fontWeight: "500", background: "#e0f2fe", color: "#0369a1", padding: "2px 8px", borderRadius: "4px" }}>
                                 {studentId}
                             </span>
                         </div>
