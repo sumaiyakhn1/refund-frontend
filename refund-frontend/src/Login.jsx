@@ -172,10 +172,10 @@ export default function Login() {
                     </div>
 
                     <div className="input-group">
-                        <label>Password</label>
+                        <label>{role === 'admin' ? 'Password' : 'DOB (Date of Birth)'}</label>
                         <input
                             type="password"
-                            placeholder="Enter password"
+                            placeholder={role === 'admin' ? 'Enter password' : 'e.g. 08-Sep-04'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
