@@ -26,6 +26,10 @@ export default function AdminDashboard() {
         permissions = "all"; // Fallback
     }
 
+    const handleDownload = () => {
+        window.open(`${API_URL}/admin/download`, "_blank");
+    };
+
     const handleLogout = () => {
         localStorage.clear();
         window.location.reload();
@@ -121,6 +125,7 @@ export default function AdminDashboard() {
             registration_cleared: student.registration_cleared,
             status: student.status,
             remark: student.remark,
+            engaged: student.engaged,
         };
 
         try {
@@ -177,12 +182,20 @@ export default function AdminDashboard() {
                         </p>
                     </div>
                 </div>
-                <button
-                    onClick={handleLogout}
-                    style={{ background: "#ef4444", padding: "10px 20px" }}
-                >
-                    Logout
-                </button>
+                <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                        onClick={handleDownload}
+                        style={{ background: "#059669", padding: "10px 20px" }}
+                    >
+                        📊 Download Excel
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        style={{ background: "#ef4444", padding: "10px 20px" }}
+                    >
+                        Logout
+                    </button>
+                </div>
             </div>
 
             {msg && (
@@ -204,6 +217,7 @@ export default function AdminDashboard() {
                                 <th className="text-center">Library</th>
                                 <th className="text-center">Scholarship</th>
                                 <th className="text-center">Registration</th>
+                                <th className="text-center" title="Engaged Status" style={{ padding: "8px 4px", width: "50px", cursor: "default" }}>🔗</th>
                                 <th className="text-center">
                                     <select
                                         value={statusFilter}
@@ -233,7 +247,11 @@ export default function AdminDashboard() {
                                 <tr key={s.student_id} style={{ backgroundColor: getRowTint(s) }}>
                                     <td style={{ fontWeight: 600 }}>{s.student_id}</td>
                                     <td style={{ fontSize: 13, color: "#64748b", whiteSpace: "nowrap" }}>
-                                        {s.timestamp || s.Timestamp || "-"}
+                                        {(() => {
+                                            const ts = s.timestamp || s.Timestamp || "-";
+                                            const [date, time] = ts.split(" ");
+                                            return time ? <>{date}<br />{time}</> : ts;
+                                        })()}
                                     </td>
                                     <td>
                                         <div style={{ fontWeight: 500 }}>{s.student_name}</div>
@@ -282,6 +300,35 @@ export default function AdminDashboard() {
                                             style={{ cursor: "pointer", justifyContent: "center", minWidth: "80px" }}
                                         >
                                             {s.registration_cleared}
+                                        </div>
+                                    </td>
+
+                                    {/* Engaged toggle slider */}
+                                    <td className="text-center" style={{ padding: "0 4px", width: "50px" }}>
+                                        <div
+                                            title={s.engaged === "YES" ? "Engaged" : "Not Engaged"}
+                                            onClick={() => {
+                                                const index = students.findIndex(st => st.student_id === s.student_id);
+                                                const newVal = s.engaged === "YES" ? "NO" : "YES";
+                                                handleChange(index, "engaged", newVal);
+                                                handleSave({ ...s, engaged: newVal });
+                                            }}
+                                            style={{
+                                                display: "inline-block",
+                                                width: "32px", height: "18px", borderRadius: "9px",
+                                                background: s.engaged === "YES" ? "#22c55e" : "#cbd5e1",
+                                                position: "relative", cursor: "pointer",
+                                                transition: "background 0.25s"
+                                            }}
+                                        >
+                                            <div style={{
+                                                width: "12px", height: "12px", borderRadius: "50%",
+                                                background: "white", position: "absolute",
+                                                top: "3px",
+                                                left: s.engaged === "YES" ? "17px" : "3px",
+                                                transition: "left 0.25s",
+                                                boxShadow: "0 1px 3px rgba(0,0,0,0.25)"
+                                            }} />
                                         </div>
                                     </td>
 

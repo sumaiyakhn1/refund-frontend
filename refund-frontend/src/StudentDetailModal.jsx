@@ -102,7 +102,34 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                             </span>
                         </div>
                     </div>
-                    <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", color: "#94a3b8", cursor: "pointer", padding: "5px" }}>&times;</button>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        {/* Engaged Toggle */}
+                        {onUpdate && (
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <span style={{ fontSize: "12px", fontWeight: "600", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Engaged</span>
+                                <div
+                                    onClick={() => onUpdate("engaged", currentStudent?.engaged === "YES" ? "NO" : "YES")}
+                                    style={{
+                                        width: "36px", height: "20px", borderRadius: "10px",
+                                        background: currentStudent?.engaged === "YES" ? "#22c55e" : "#cbd5e1",
+                                        position: "relative", cursor: "pointer",
+                                        transition: "background 0.25s",
+                                        flexShrink: 0
+                                    }}
+                                >
+                                    <div style={{
+                                        width: "14px", height: "14px", borderRadius: "50%",
+                                        background: "white", position: "absolute",
+                                        top: "3px",
+                                        left: currentStudent?.engaged === "YES" ? "19px" : "3px",
+                                        transition: "left 0.25s",
+                                        boxShadow: "0 1px 3px rgba(0,0,0,0.2)"
+                                    }} />
+                                </div>
+                            </div>
+                        )}
+                        <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", color: "#94a3b8", cursor: "pointer", padding: "5px" }}>&times;</button>
+                    </div>
                 </div>
 
                 {/* Body - Scrollable */}
@@ -185,7 +212,7 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                                         {["fee_cleared", "library_cleared", "scholarship_cleared", "registration_cleared"].map(field => {
                                             const canEdit = permissions === "all" || permissions === field;
                                             const label = field.replace('_cleared', '').toUpperCase();
-                                            const value = currentStudent[field];
+                                            const value = currentStudent[field] || "NO";
 
                                             return (
                                                 <div key={field} style={{
