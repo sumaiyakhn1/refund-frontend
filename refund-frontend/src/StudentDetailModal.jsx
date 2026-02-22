@@ -178,67 +178,93 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
 
                     {/* Section: Actions */}
                     {currentStudent && onUpdate && (
-                        <Section title="Clearance Actions">
-                            <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "20px" }}>
-                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                                    {["fee_cleared", "library_cleared", "scholarship_cleared", "registration_cleared"].map(field => {
-                                        const canEdit = permissions === "all" || permissions === field;
-                                        const label = field.replace('_cleared', '').toUpperCase();
-                                        const value = currentStudent[field];
+                        <>
+                            <Section title="Clearance Actions">
+                                <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "20px" }}>
+                                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                                        {["fee_cleared", "library_cleared", "scholarship_cleared", "registration_cleared"].map(field => {
+                                            const canEdit = permissions === "all" || permissions === field;
+                                            const label = field.replace('_cleared', '').toUpperCase();
+                                            const value = currentStudent[field];
 
-                                        return (
-                                            <div key={field} style={{
-                                                display: "flex", justifyContent: "space-between", alignItems: "center",
-                                                padding: "10px 15px", background: "white", borderRadius: "8px", border: "1px solid #e2e8f0"
-                                            }}>
-                                                <span style={{ fontSize: "13px", fontWeight: "600", color: "#475569" }}>{label}</span>
-                                                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                                                    <select
-                                                        value={value}
-                                                        onChange={(e) => onUpdate(field, e.target.value)}
-                                                        disabled={!canEdit}
-                                                        style={{
-                                                            padding: "6px 24px 6px 12px", borderRadius: "6px",
-                                                            border: `1px solid ${value === 'YES' ? '#86efac' : '#fca5a5'} `,
-                                                            background: value === 'YES' ? '#f0fdf4' : '#fef2f2',
-                                                            color: value === 'YES' ? '#166534' : '#991b1b',
-                                                            fontWeight: "600", fontSize: "13px",
-                                                            cursor: canEdit ? "pointer" : "not-allowed",
-                                                            opacity: canEdit ? 1 : 0.7,
-                                                            appearance: "none",
-                                                            backgroundImage: "url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e\")",
-                                                            backgroundRepeat: "no-repeat",
-                                                            backgroundPosition: "right 8px center",
-                                                            backgroundSize: "12px"
-                                                        }}
-                                                    >
-                                                        <option value="NO">NO</option>
-                                                        <option value="YES">YES</option>
-                                                    </select>
+                                            return (
+                                                <div key={field} style={{
+                                                    display: "flex", justifyContent: "space-between", alignItems: "center",
+                                                    padding: "10px 15px", background: "white", borderRadius: "8px", border: "1px solid #e2e8f0"
+                                                }}>
+                                                    <span style={{ fontSize: "13px", fontWeight: "600", color: "#475569" }}>{label}</span>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                                        <select
+                                                            value={value}
+                                                            onChange={(e) => onUpdate(field, e.target.value)}
+                                                            disabled={!canEdit}
+                                                            style={{
+                                                                padding: "6px 24px 6px 12px", borderRadius: "6px",
+                                                                border: `1px solid ${value === 'YES' ? '#86efac' : '#fca5a5'} `,
+                                                                background: value === 'YES' ? '#f0fdf4' : '#fef2f2',
+                                                                color: value === 'YES' ? '#166534' : '#991b1b',
+                                                                fontWeight: "600", fontSize: "13px",
+                                                                cursor: canEdit ? "pointer" : "not-allowed",
+                                                                opacity: canEdit ? 1 : 0.7,
+                                                                appearance: "none",
+                                                                backgroundImage: "url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e\")",
+                                                                backgroundRepeat: "no-repeat",
+                                                                backgroundPosition: "right 8px center",
+                                                                backgroundSize: "12px"
+                                                            }}
+                                                        >
+                                                            <option value="NO">NO</option>
+                                                            <option value="YES">YES</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                            );
+                                        })}
+                                    </div>
 
-                                <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
-                                    <button
-                                        onClick={() => onSave(currentStudent)}
-                                        style={{
-                                            padding: "12px 30px", background: "#2563eb", color: "white",
-                                            border: "none", borderRadius: "8px", cursor: "pointer",
-                                            fontWeight: "600", fontSize: "14px",
-                                            boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-                                            transition: "background 0.2s"
-                                        }}
-                                        onMouseOver={e => e.target.style.background = "#1d4ed8"}
-                                        onMouseOut={e => e.target.style.background = "#2563eb"}
-                                    >
-                                        Save Changes
-                                    </button>
                                 </div>
+                            </Section>
+
+                            {/* Section: Remark */}
+                            <Section title="Admin Remark">
+                                <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "20px" }}>
+                                    <textarea
+                                        value={currentStudent.remark || ""}
+                                        onChange={(e) => onUpdate("remark", e.target.value)}
+                                        placeholder="Add a remark (e.g., Missing document, Pending verification...)"
+                                        style={{
+                                            width: "100%",
+                                            minHeight: "100px",
+                                            padding: "12px",
+                                            borderRadius: "8px",
+                                            border: "1px solid #cbd5e1",
+                                            fontSize: "14px",
+                                            fontFamily: "inherit",
+                                            resize: "vertical"
+                                        }}
+                                    />
+                                    <p style={{ fontSize: "12px", color: "#64748b", marginTop: "8px" }}>
+                                        This remark will be visible to the student in their dashboard.
+                                    </p>
+                                </div>
+                            </Section>
+
+                            <div style={{ marginTop: "20px", padding: "20px 0", borderTop: "1px solid #e2e8f0" }}>
+                                <button
+                                    onClick={() => onSave(currentStudent)}
+                                    style={{
+                                        width: "100%", padding: "14px",
+                                        background: "#2563eb", color: "white",
+                                        border: "none", borderRadius: "10px",
+                                        fontWeight: "700", fontSize: "16px",
+                                        boxShadow: "0 4px 15px rgba(37, 99, 235, 0.3)",
+                                        cursor: "pointer", transition: "all 0.2s"
+                                    }}
+                                >
+                                    💾 Save All Updates
+                                </button>
                             </div>
-                        </Section>
+                        </>
                     )}
                 </div>
             </div>

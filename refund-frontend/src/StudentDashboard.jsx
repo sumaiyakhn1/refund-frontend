@@ -139,6 +139,28 @@ export default function StudentDashboard() {
                             </div>
                         </div>
 
+                        {record.remark && (
+                            <>
+                                <hr style={{ margin: "20px 0", border: 0, borderTop: "1px solid #e2e8f0" }} />
+                                <div>
+                                    <label style={{ fontSize: 12, color: "#64748b", fontWeight: "600", textTransform: "uppercase" }}>Admin Remark</label>
+                                    <div style={{
+                                        marginTop: "8px",
+                                        padding: "12px",
+                                        background: "#fff7ed",
+                                        border: "1px solid #ffedd5",
+                                        borderRadius: "8px",
+                                        color: "#9a3412",
+                                        fontSize: "14px",
+                                        fontWeight: "500",
+                                        lineHeight: "1.5"
+                                    }}>
+                                        {record.remark}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
                         <hr style={{ margin: "20px 0", border: 0, borderTop: "1px solid #e2e8f0" }} />
 
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>

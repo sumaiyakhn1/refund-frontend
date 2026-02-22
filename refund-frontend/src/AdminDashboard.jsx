@@ -120,6 +120,7 @@ export default function AdminDashboard() {
             scholarship_cleared: student.scholarship_cleared,
             registration_cleared: student.registration_cleared,
             status: student.status,
+            remark: student.remark,
         };
 
         try {
