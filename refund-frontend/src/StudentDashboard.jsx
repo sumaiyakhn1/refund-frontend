@@ -109,7 +109,11 @@ export default function StudentDashboard() {
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
                         {["Registration No", "Student Name", "Fathers Name", "Category", "Student Mobile No"].map((field) => {
                             const studentDetails = JSON.parse(localStorage.getItem("student_details") || "{}");
-                            const value = studentDetails[field] || studentDetails[field.replace('.', '')] || "N/A";
+                            const value = studentDetails[field]
+                                || studentDetails[field.replace('.', '')]
+                                || studentDetails["student_mobile"]
+                                || studentDetails["Student Mobile"]
+                                || "N/A";
                             return (
                                 <div key={field}>
                                     <label style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: "600" }}>{field}</label>
@@ -237,9 +241,10 @@ export default function StudentDashboard() {
                     {["Registration No", "Student Name", "Fathers Name", "Category", "Student Mobile No"].map((field) => {
                         const studentDetails = JSON.parse(localStorage.getItem("student_details") || "{}");
                         // Try to match keys somewhat loosely or exact
-                        // The keys in localStorage will match Excel headers exact if pandas read them that way.
-                        // We can display whatever we find.
-                        const value = studentDetails[field] || studentDetails[field.replace('.', '')] || "N/A";
+                        const value = studentDetails[field]
+                            || studentDetails[field.replace('.', '')]
+                            || (field === "Student Mobile No" ? (studentDetails["student_mobile"] || studentDetails["Student Mobile"]) : null)
+                            || "N/A";
                         return (
                             <div key={field}>
                                 <label style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: "600" }}>{field}</label>

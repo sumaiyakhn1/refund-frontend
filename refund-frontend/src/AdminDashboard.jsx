@@ -216,7 +216,7 @@ export default function AdminDashboard() {
                                 <th>ID</th>
                                 <th>Submitted On</th>
                                 <th>Name</th>
-                                <th>Course</th>
+
                                 <th>Bank Details</th>
 
                                 <th className="text-center">Fee</th>
@@ -263,9 +263,7 @@ export default function AdminDashboard() {
                                         <div style={{ fontWeight: 500 }}>{s.student_name}</div>
                                         <div style={{ fontSize: 12, color: "#94a3b8" }}>{s.dob}</div>
                                     </td>
-                                    <td style={{ fontSize: 13, fontWeight: 600, color: "#475569" }}>
-                                        {s.course?.toUpperCase() || "—"}
-                                    </td>
+
                                     <td>
 
                                         <div>{s.bank_name}</div>
