@@ -149,8 +149,8 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                             <InfoItem label="Email" value={details.email} />
                             <InfoItem label="Stream" value={details.stream} />
                             <InfoItem label="Class / Section" value={`${details.batch || ""} ${details.section ? `(Sec ${details.section})` : ""} `} />
-                            {/* <InfoItem label="Course / Class" value={details.course} /> */}
-                            <InfoItem label="Security Amount" value={details.security} />
+                            <InfoItem label="Course / Class" value={details.course} />
+                            <InfoItem label="Security Amount" value={details.security || currentStudent?.security} />
                         </Grid>
 
 
