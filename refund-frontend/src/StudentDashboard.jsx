@@ -61,6 +61,8 @@ export default function StudentDashboard() {
             scholarship_cleared: "NO",
             registration_cleared: "NO",
             status: "PENDING",
+            security: studentDetails["security"] || "",
+            course: studentDetails["course"] || "",
         };
 
         const res = await fetch(`${API_URL}/admin/student`, {
@@ -137,7 +139,12 @@ export default function StudentDashboard() {
                                     </span>
                                 </div>
                             </div>
+                            <div>
+                                <label style={{ fontSize: 12, color: "#64748b" }}>Security Amount</label>
+                                <div style={{ fontWeight: 600 }}>{record.security || "—"}</div>
+                            </div>
                         </div>
+
 
                         {record.remark && (
                             <>

@@ -126,7 +126,11 @@ export default function AdminDashboard() {
             status: student.status,
             remark: student.remark,
             engaged: student.engaged,
+            security: student.security,
+            course: student.course,
         };
+
+
 
         try {
             const res = await fetch(`${API_URL}/admin/student`, {
