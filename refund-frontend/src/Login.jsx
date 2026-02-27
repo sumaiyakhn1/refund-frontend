@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-export default function Login() {
+export default function Login({ isAdminRoute = false }) {
     const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
-    const [role, setRole] = useState("student"); // 'student' | 'admin'
+    const [role, setRole] = useState(isAdminRoute ? "admin" : "student"); // 'student' | 'admin'
     const [course, setCourse] = useState("");
     const [id, setId] = useState("");
     const [password, setPassword] = useState(""); // DOB or Admin Password
@@ -119,21 +119,7 @@ export default function Login() {
                     </p>
                 </div>
 
-                {/* TAB SYSTEM */}
-                <div className="tabs">
-                    <div
-                        className={`tab ${role === 'student' ? 'active' : ''}`}
-                        onClick={() => { setRole('student'); setMessage(""); setId(""); setPassword(""); setCourse(""); }}
-                    >
-                        Student Login
-                    </div>
-                    <div
-                        className={`tab ${role === 'admin' ? 'active' : ''}`}
-                        onClick={() => { setRole('admin'); setMessage(""); setId(""); setPassword(""); setCourse(""); }}
-                    >
-                        Admin Login
-                    </div>
-                </div>
+
 
                 <form onSubmit={handleLogin} className="form-group">
                     {role === 'student' && (
@@ -162,9 +148,9 @@ export default function Login() {
                     )}
 
                     <div className="input-group">
-                        <label>{role === 'admin' ? 'Admin Username' : 'Registration Number'}</label>
+                        <label>{role === 'admin' ? 'Admin Username' : 'College Roll No.'}</label>
                         <input
-                            placeholder={role === 'admin' ? 'e.g. admin' : 'e.g. REG2024001'}
+                            placeholder={role === 'admin' ? 'e.g. admin' : 'e.g. 120198000000'}
                             value={id}
                             onChange={(e) => setId(e.target.value)}
                         // Autofocus only if this field is empty to be polite
@@ -172,10 +158,10 @@ export default function Login() {
                     </div>
 
                     <div className="input-group">
-                        <label>{role === 'admin' ? 'Password' : 'DOB (Date of Birth)'}</label>
+                        <label>{role === 'admin' ? 'Password' : 'Registration No'}</label>
                         <input
-                            type="password"
-                            placeholder={role === 'admin' ? 'Enter password' : 'e.g. 08-Sep-04'}
+                            type={role === 'admin' ? 'password' : 'text'}
+                            placeholder={role === 'admin' ? 'Enter password' : 'e.g. 20-RK-442'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />

@@ -81,8 +81,14 @@ export default function StudentDashboard() {
         window.location.reload();
     };
 
-    if (loading) return <div className="wrapper text-center"><p>Loading student data...</p></div>;
-
+    if (loading) return (
+        <div className="wrapper" style={{ textAlign: "center", padding: "40px 20px" }}>
+            <p>Loading student data...</p>
+            <button onClick={handleLogout} style={{ marginTop: "20px", background: "#f87171", padding: "8px 16px", border: "none", borderRadius: "8px", color: "#fff", cursor: "pointer" }}>
+                Logout
+            </button>
+        </div>
+    );
     // ✅ SHOW STATUS VIEW
     if (record) {
         return (
