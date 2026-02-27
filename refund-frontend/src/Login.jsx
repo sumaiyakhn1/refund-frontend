@@ -10,9 +10,9 @@ export default function Login({ isAdminRoute = false }) {
     const [message, setMessage] = useState("");
 
     const COURSES = [
-        "b.a", "bcoma ided", "bcom sf", "bsc ele.", "bsc med.",
-        "bsc nm", "bscn nm sf", "bsc cs", "b.voc", "bba",
-        "bca", "eng", "hindi", "pol.sc.", "msc maths", "YOGA"
+        "B.A Aided", "BCom Aided", "BCom SFs", "BSc Elec (Aided)", "BSc Med (Aided)",
+        "BSc Non Med (Aided)", "BSc Non Med (SFs)", "BSc CS", "B.Voc", "BBA (SFs)",
+        "BCA (SFs)", "MA Eng (Aided)", "MA Hindi (Aided)", "MA Pol.Sc. (Aided)", "MSc Maths (SFs)", "PGD Yoga (SFs)"
     ];
 
     const handleLogin = async (e) => {
@@ -84,6 +84,21 @@ export default function Login({ isAdminRoute = false }) {
 
     return (
         <>
+            {loading && (
+                <div className="fullscreen-loader">
+                    <div className="spinner-container">
+                        <div className="spiral-spinner"></div>
+                        <div className="spiral-spinner reverse-spinner"></div>
+                        <div className="loader-logos">
+                            <img src="/rksdlogo1.jpeg" alt="RKSD" className="rksd-spin-logo" />
+                            <img src="https://okiedokie-erp-images.s3.ap-south-1.amazonaws.com/Okie%20Dokie/2025/12/sourceURL/26aebcbe10f4ac5a3e8b-611ed1b9032568edd4f3-Okie_Dokie_App_icon__2___2_-removebg-preview.png" alt="Okie Dokie" className="okie-spin-logo" />
+                        </div>
+                    </div>
+                    <h2>Authenticating...</h2>
+                    <p>Connecting to secure server</p>
+                </div>
+            )}
+
             <div className="wrapper">
                 <div style={{
                     display: "flex",
