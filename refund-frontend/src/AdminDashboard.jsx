@@ -113,22 +113,22 @@ export default function AdminDashboard() {
 
         // 🔒 Strip fields backend does not accept
         const payload = {
-            student_id: String(student.student_id),
-            student_name: student.student_name,
-            bank_name: student.bank_name,
-            account_no: String(student.account_no),
-            ifsc: String(student.ifsc),
-            account_holder: student.account_holder,
-            contact_mobile: student.contact_mobile,
-            fee_cleared: student.fee_cleared,
-            library_cleared: student.library_cleared,
-            scholarship_cleared: student.scholarship_cleared,
-            registration_cleared: student.registration_cleared,
-            status: student.status,
-            remark: student.remark,
-            engaged: student.engaged,
-            security: student.security,
-            course: student.course,
+            student_id: String(student.student_id || ""),
+            student_name: student.student_name != null ? String(student.student_name) : null,
+            bank_name: student.bank_name != null ? String(student.bank_name) : null,
+            account_no: student.account_no != null ? String(student.account_no) : null,
+            ifsc: student.ifsc != null ? String(student.ifsc) : null,
+            account_holder: student.account_holder != null ? String(student.account_holder) : null,
+            contact_mobile: student.contact_mobile != null ? String(student.contact_mobile) : null,
+            fee_cleared: student.fee_cleared != null ? String(student.fee_cleared) : null,
+            library_cleared: student.library_cleared != null ? String(student.library_cleared) : null,
+            scholarship_cleared: student.scholarship_cleared != null ? String(student.scholarship_cleared) : null,
+            registration_cleared: student.registration_cleared != null ? String(student.registration_cleared) : null,
+            status: student.status != null ? String(student.status) : null,
+            remark: student.remark != null ? String(student.remark) : null,
+            engaged: student.engaged != null ? String(student.engaged) : null,
+            security: student.security != null ? String(student.security) : null,
+            course: student.course != null ? String(student.course) : null,
         };
 
 
@@ -143,7 +143,11 @@ export default function AdminDashboard() {
             const data = await res.json();
 
             if (!res.ok) {
-                setMsg(`❌ ${data.detail || "Update failed"}`);
+                let errorMsg = data.detail || "Update failed";
+                if (typeof errorMsg === 'object') {
+                    errorMsg = JSON.stringify(errorMsg);
+                }
+                setMsg(`❌ ${errorMsg}`);
                 return;
             }
 
