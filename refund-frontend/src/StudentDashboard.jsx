@@ -16,6 +16,7 @@ export default function StudentDashboard() {
         account_no: "",
         ifsc: "",
         account_holder: "",
+        contact_mobile: "",
     });
 
     const handleLogout = () => {
@@ -306,6 +307,17 @@ export default function StudentDashboard() {
                     <input
                         name="account_holder"
                         placeholder="Beneficiary Name"
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="input-group">
+                    <label>Contact Mobile Number</label>
+                    <input
+                        name="contact_mobile"
+                        placeholder="Enter another mobile number for contact"
+                        value={form.contact_mobile}
                         onChange={handleChange}
                         required
                     />

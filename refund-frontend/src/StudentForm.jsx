@@ -10,6 +10,7 @@ export default function StudentForm() {
         account_no: "",
         ifsc: "",
         account_holder: "",
+        student_mobile: "",
     });
 
     const [msg, setMsg] = useState("");
@@ -50,6 +51,7 @@ export default function StudentForm() {
             account_no: formData.account_no,
             ifsc: formData.ifsc,
             account_holder: formData.account_holder,
+            student_mobile: formData.student_mobile,
             fee_cleared: "NO",
             library_cleared: "NO",
             status: "PENDING",
@@ -146,6 +148,16 @@ export default function StudentForm() {
                         name="account_holder"
                         placeholder="Beneficiary Name"
                         value={formData.account_holder}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div className="input-group">
+                    <label>Mobile Number</label>
+                    <input
+                        name="student_mobile"
+                        placeholder="Enter 10-digit mobile number"
+                        value={formData.student_mobile}
                         onChange={handleChange}
                     />
                 </div>

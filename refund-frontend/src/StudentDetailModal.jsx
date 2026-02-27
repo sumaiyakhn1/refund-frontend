@@ -145,11 +145,12 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                             <InfoItem label="Mother's Name" value={details.motherName} />
                             <InfoItem label="Date of Birth" value={formatDate(details.dob)} />
                             <InfoItem label="Gender" value={details.gender} />
-                            <InfoItem label="Phone" value={details.phone} />
+                            <InfoItem label="Phone (College Record)" value={details.phone || details.student_mobile} />
                             <InfoItem label="Email" value={details.email} />
                             <InfoItem label="Stream" value={details.stream} />
                             <InfoItem label="Class / Section" value={`${details.batch || ""} ${details.section ? `(Sec ${details.section})` : ""} `} />
                             <InfoItem label="Course / Class" value={details.course} />
+                            <InfoItem label="Application Contact No" value={details.contact_mobile || currentStudent?.contact_mobile} />
                             <InfoItem label="Security Amount" value={details.security || currentStudent?.security} />
                         </Grid>
 

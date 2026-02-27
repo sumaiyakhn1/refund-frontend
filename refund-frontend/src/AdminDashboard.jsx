@@ -119,6 +119,7 @@ export default function AdminDashboard() {
             account_no: String(student.account_no),
             ifsc: String(student.ifsc),
             account_holder: student.account_holder,
+            contact_mobile: student.contact_mobile,
             fee_cleared: student.fee_cleared,
             library_cleared: student.library_cleared,
             scholarship_cleared: student.scholarship_cleared,
