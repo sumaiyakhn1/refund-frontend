@@ -142,7 +142,7 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                     <Section title="Academic & Personal Details">
                         <Grid>
                             <InfoItem label="Father's Name" value={details.fatherName} />
-                            <InfoItem label="Mother's Name" value={details.motherName} />
+                            <InfoItem label="Mother's Name" value={currentStudent?.mother_name || details.motherName} />
                             <InfoItem label="Date of Birth" value={formatDate(details.dob)} />
                             <InfoItem label="Gender" value={details.gender} />
                             <InfoItem label="Phone (College Record)" value={details.phone || details.student_mobile} />

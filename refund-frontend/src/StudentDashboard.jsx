@@ -16,6 +16,7 @@ export default function StudentDashboard() {
         account_no: "",
         ifsc: "",
         account_holder: "",
+        mother_name: "",
         contact_mobile: "",
     });
 
@@ -153,6 +154,10 @@ export default function StudentDashboard() {
                             <div>
                                 <label style={{ fontSize: 12, color: "#64748b" }}>Security Amount</label>
                                 <div style={{ fontWeight: 600 }}>{record.security || "—"}</div>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: 12, color: "#64748b" }}>Mother Name</label>
+                                <div style={{ fontWeight: 600 }}>{record.mother_name || "—"}</div>
                             </div>
                         </div>
 
@@ -313,6 +318,17 @@ export default function StudentDashboard() {
                     <input
                         name="account_holder"
                         placeholder="Beneficiary Name"
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="input-group">
+                    <label>Mother Name</label>
+                    <input
+                        name="mother_name"
+                        placeholder="Enter Mother's Name"
+                        value={form.mother_name}
                         onChange={handleChange}
                         required
                     />
