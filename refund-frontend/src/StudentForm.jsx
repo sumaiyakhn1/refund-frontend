@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 export default function StudentForm() {
-    const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
+    const API_URL = import.meta.env.VITE_API_URL || "https://refund-backend-1.onrender.com";
+    console.log("Current Backend URL:", API_URL);
     const studentId = localStorage.getItem("student_id");
 
     const [formData, setFormData] = useState({

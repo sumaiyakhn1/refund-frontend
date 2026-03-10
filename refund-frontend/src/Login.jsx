@@ -1,80 +1,93 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { portalLogin } from "./services/authService";
+import { getStudentDetails } from "./services/studentService";
+import { getSecurityFee } from "./utils/feeMapping";
 
 export default function Login({ isAdminRoute = false }) {
-    const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
+    const API_URL = import.meta.env.VITE_API_URL || "https://refund-backend-1.onrender.com";
+    console.log("Current Backend URL:", API_URL);
     const [role, setRole] = useState(isAdminRoute ? "admin" : "student"); // 'student' | 'admin'
-    const [course, setCourse] = useState("");
-    const [id, setId] = useState("");
-    const [password, setPassword] = useState(""); // DOB or Admin Password
+    
+    // Detect pre-fill from URL
+    const getInitialRegNo = () => {
+        const params = new URLSearchParams(window.location.search || window.location.hash.split('?')[1]);
+        return params.get("regNo") || "";
+    };
+
+    const [regNo, setRegNo] = useState(getInitialRegNo());
+    const [adminId, setAdminId] = useState("");
+    const [adminPassword, setAdminPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
-
-    const COURSES = [
-        "B.A Aided", "BCom Aided", "BCom SFs", "BSc Elec (Aided)", "BSc Med (Aided)",
-        "BSc Non Med (Aided)", "BSc Non Med (SFs)", "BSc CS", "B.Voc", "BBA (SFs)",
-        "BCA (SFs)", "MA Eng (Aided)", "MA Hindi (Aided)", "MA Pol.Sc. (Aided)", "MSc Maths (SFs)", "PGD Yoga (SFs)"
-    ];
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setMessage("");
 
-        if (!id || !password || (role === 'student' && !course)) {
-            alert("Please enter all fields");
+        if (role === 'student' && !regNo) {
+            alert("Please enter Registration No");
+            return;
+        }
+
+        if (role === 'admin' && (!adminId || !adminPassword)) {
+            alert("Please enter admin credentials");
             return;
         }
 
         setLoading(true);
 
         try {
-            // Using the same endpoint but logic differs slightly
-            // Using the same endpoint but logic differs slightly
-            console.log("Logging in with:", `${API_URL}/login`);
-            const res = await fetch(`${API_URL}/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    id: id,
-                    password: password,
-                    course: role === 'student' ? course : null
-                }),
-            });
+            if (role === 'admin') {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id: adminId,
+                        password: adminPassword,
+                        role: 'admin'
+                    }),
+                });
 
-            if (!res.ok) {
-                const text = await res.text();
-                try {
-                    const errorData = JSON.parse(text);
-                    throw new Error(errorData.detail || `Login failed: ${res.status}`);
-                } catch (e) {
-                    throw new Error(`Login failed: ${res.status} ${text}`);
-                }
-            }
+                if (!res.ok) throw new Error("Invalid admin credentials");
+                const data = await res.json();
 
-            const data = await res.json();
-
-            // Role Mismatch Check
-            if (data.role !== role) {
-                throw new Error(`This account exists but is not a ${role} account.`);
-            }
-
-            if (data.role === "student") {
-                localStorage.setItem("role", "student");
-                localStorage.setItem("student_id", data.student_id);
-                if (data.student_details) {
-                    localStorage.setItem("student_details", JSON.stringify(data.student_details));
-                }
-                setMessage(`✅ Welcome, ${data.student_id}`);
-                setTimeout(() => window.location.reload(), 1000);
-            } else if (data.role === "admin") {
                 localStorage.setItem("role", "admin");
                 localStorage.setItem("admin_id", data.admin_id);
-                // Store permissions if available, else default to 'all' (backward compatibility)
                 localStorage.setItem("permissions", JSON.stringify(data.permissions || "all"));
 
                 setMessage("✅ Welcome Admin");
                 setTimeout(() => window.location.reload(), 1000);
-            }
+            } else {
+                // Student Login via Official API
+                const token = await portalLogin();
+                if (!token) throw new Error("Authentication server unavailable");
 
+                const student = await getStudentDetails(regNo);
+                
+                if (!student) throw new Error("Student not found in official records");
+
+                // Store student details for pre-filling the form
+                const mappedDetails = {
+                    "Registration No": student.regNo || regNo,
+                    "Student Name": student.studentName || student.name || "N/A",
+                    "Fathers Name": student.fatherName || "N/A",
+                    "Category": student.category || "N/A",
+                    "Student Mobile No": student.phone || student.mobile || "N/A",
+                    "course": student.course || student.courseName || "N/A",
+                    "security": getSecurityFee(student.course || student.courseName),
+                    "id": student.rollNo || student.id || regNo,
+                    "photo": student.studentPhoto || student.photo || null
+                };
+
+                localStorage.setItem("role", "student");
+                localStorage.setItem("student_id", mappedDetails.id);
+                localStorage.setItem("student_name", mappedDetails["Student Name"]);
+                localStorage.setItem("student_details", JSON.stringify(mappedDetails));
+                localStorage.setItem("authToken", token);
+
+                setMessage(`✅ Welcome, ${mappedDetails["Student Name"]}`);
+                setTimeout(() => window.location.reload(), 1000);
+            }
         } catch (err) {
             setMessage(`❌ ${err.message}`);
         } finally {
@@ -137,50 +150,36 @@ export default function Login({ isAdminRoute = false }) {
 
 
                 <form onSubmit={handleLogin} className="form-group">
-                    {role === 'student' && (
+                    {role === 'student' ? (
                         <div className="input-group">
-                            <label>Class / Course</label>
-                            <select
-                                value={course}
-                                onChange={(e) => setCourse(e.target.value)}
-                                style={{
-                                    width: "100%",
-                                    padding: "12px",
-                                    border: "1px solid #cbd5e1",
-                                    borderRadius: "8px",
-                                    fontSize: "14px",
-                                    color: "#334155",
-                                    outline: "none",
-                                    background: "#fff"
-                                }}
-                            >
-                                <option value="">Select your course</option>
-                                {COURSES.map(c => (
-                                    <option key={c} value={c}>{c.toUpperCase()}</option>
-                                ))}
-                            </select>
+                            <label>Registration No</label>
+                            <input
+                                placeholder="e.g. 1211982002614"
+                                value={regNo}
+                                onChange={(e) => setRegNo(e.target.value)}
+                            />
                         </div>
+                    ) : (
+                        <>
+                            <div className="input-group">
+                                <label>Admin Username</label>
+                                <input
+                                    placeholder="e.g. admin"
+                                    value={adminId}
+                                    onChange={(e) => setAdminId(e.target.value)}
+                                />
+                            </div>
+                            <div className="input-group">
+                                <label>Password</label>
+                                <input
+                                    type="password"
+                                    placeholder="Enter password"
+                                    value={adminPassword}
+                                    onChange={(e) => setAdminPassword(e.target.value)}
+                                />
+                            </div>
+                        </>
                     )}
-
-                    <div className="input-group">
-                        <label>{role === 'admin' ? 'Admin Username' : 'College Roll No.'}</label>
-                        <input
-                            placeholder={role === 'admin' ? 'e.g. admin' : 'e.g. 120198000000'}
-                            value={id}
-                            onChange={(e) => setId(e.target.value)}
-                        // Autofocus only if this field is empty to be polite
-                        />
-                    </div>
-
-                    <div className="input-group">
-                        <label>{role === 'admin' ? 'Password' : 'Registration No'}</label>
-                        <input
-                            type={role === 'admin' ? 'password' : 'text'}
-                            placeholder={role === 'admin' ? 'Enter password' : 'e.g. 20-RK-442'}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
 
                     <button type="submit" disabled={loading}>
                         {loading ? "Authenticating..." : `Sign In as ${role === 'admin' ? 'Admin' : 'Student'}`}

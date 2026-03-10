@@ -56,6 +56,23 @@ body {
     border: 1px solid var(--border);
 }
 
+.dashboard-wrapper {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: var(--surface);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+    .dashboard-wrapper {
+        margin: 10px;
+        padding: 15px;
+    }
+}
+
 .title {
     font-size: 24px;
     font-weight: 700;

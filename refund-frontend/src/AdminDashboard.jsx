@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import StudentDetailModal from "./StudentDetailModal";
 
 export default function AdminDashboard() {
-    const API_URL = import.meta.env.VITE_API_URL ?? "https://refund-backend-1.onrender.com";
+    const API_URL = import.meta.env.VITE_API_URL || "https://refund-backend-1.onrender.com";
+    console.log("Current Backend URL:", API_URL);
     const [students, setStudents] = useState([]);
     const [msg, setMsg] = useState("");
     const [selectedStudentId, setSelectedStudentId] = useState(null);
