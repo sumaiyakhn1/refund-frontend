@@ -58,6 +58,18 @@ export default function Login({ isAdminRoute = false }) {
                 setMessage("✅ Welcome Admin");
                 setTimeout(() => window.location.reload(), 1000);
             } else {
+                // Student Login Validation against Excel File
+                const validationRes = await fetch(`${API_URL}/validate-registration/${regNo}`);
+                if (!validationRes.ok) {
+                    const errorData = await validationRes.json();
+                    throw new Error(errorData.detail || "Validation server error");
+                }
+                
+                const validationData = await validationRes.json();
+                if (!validationData.valid) {
+                    throw new Error(validationData.message || "You are not applicable for the college security refund");
+                }
+
                 // Student Login via Official API
                 const token = await portalLogin();
                 if (!token) throw new Error("Authentication server unavailable");
