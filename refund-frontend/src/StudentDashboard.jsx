@@ -90,13 +90,17 @@ export default function StudentDashboard() {
             "Bachelor of Science (Non Medical) (Self Finance)",
             "Bachelor of Science (Computer Science) (Self Finance)",
             "Bachelor of Vocational in Banking, Financial Service",
-            "Bachelor of Business Administration (Self Finance)",
-            "Bachelor of Computer Applications (Self Finance)",
+            "Bachelor of Business Administration",
+            "Bachelor of Computer Applications",
             // Also matching shorthand if they appear
             "B.Sc. (Non-Medical) SFS - SFS",
             "B.Sc. ( computer science ) - SFS",
-            "BBA - SFS",
-            "BCA - SFS"
+            "non-medical sfs",
+            "computer science",
+            "banking",
+            "b.voc",
+            "bba",
+            "bca"
         ];
 
         if (sfsCourses.some(c => currentCourse.toLowerCase().includes(c.toLowerCase()))) {

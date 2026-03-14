@@ -28,6 +28,11 @@ export default function AdminDashboard() {
     }
 
     const handleDownload = () => {
+        const hasApproved = students.some(s => s.status === 'APPROVED');
+        if (!hasApproved) {
+            alert("There are currently no approved entries to download.");
+            return;
+        }
         window.open(`${API_URL}/admin/download`, "_blank");
     };
 
