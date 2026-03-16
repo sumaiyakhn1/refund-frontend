@@ -8,6 +8,8 @@ export default function AdminDashboard() {
     const [msg, setMsg] = useState("");
     const [selectedStudentId, setSelectedStudentId] = useState(null);
     const [statusFilter, setStatusFilter] = useState("ALL");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const filteredStudents = students.filter(s => {
         if (statusFilter === "ALL") return true;
@@ -15,6 +17,10 @@ export default function AdminDashboard() {
         if (statusFilter === "CLEARED") return sStatus === "APPROVED" || sStatus === "CLEARED";
         return sStatus === statusFilter;
     });
+
+    const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentItems = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
     // Get role and permissions
     const role = localStorage.getItem("role");
@@ -220,11 +226,46 @@ export default function AdminDashboard() {
                 </div>
             )}
 
+            {/* Dashboard Stats */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "24px" }}>
+                <div style={{ padding: "20px", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>TOTAL</div>
+                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#0f172a", marginTop: "8px" }}>{students.length}</div>
+                </div>
+                <div style={{ padding: "20px", background: "#fffbeb", borderRadius: "12px", border: "1px solid #fde68a" }}>
+                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>PENDING</div>
+                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#d97706", marginTop: "8px" }}>
+                        {students.filter(s => !s.status || s.status.toUpperCase() === "PENDING").length}
+                    </div>
+                </div>
+                <div style={{ padding: "20px", background: "#f0fdf4", borderRadius: "12px", border: "1px solid #bbf7d0" }}>
+                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>APPROVED</div>
+                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#16a34a", marginTop: "8px" }}>
+                        {students.filter(s => s.status && (s.status.toUpperCase() === "APPROVED" || s.status.toUpperCase() === "CLEARED")).length}
+                    </div>
+                </div>
+                <div style={{ padding: "20px", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>TODAY</div>
+                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#0f172a", marginTop: "8px" }}>
+                        {students.filter(s => {
+                            if (!s.timestamp && !s.Timestamp) return false;
+                            const ts = s.timestamp || s.Timestamp;
+                            const dateStr = ts.split(" ")[0];
+                            const today = new Date();
+                            const ymd = today.toISOString().split("T")[0];
+                            const dmy = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+                            return dateStr === ymd || dateStr === dmy;
+                        }).length}
+                    </div>
+                </div>
+            </div>
+
             <div className="card">
                 <div style={{ overflowX: "auto" }}>
                     <table>
                         <thead>
                             <tr>
+                                <th>S.No.</th>
                                 <th>ID</th>
                                 <th>Submitted On</th>
                                 <th>Name</th>
@@ -239,7 +280,7 @@ export default function AdminDashboard() {
                                 <th className="text-center">
                                     <select
                                         value={statusFilter}
-                                        onChange={(e) => setStatusFilter(e.target.value)}
+                                        onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
                                         onClick={(e) => e.stopPropagation()}
                                         style={{
                                             padding: "4px", borderRadius: "4px", border: "none",
@@ -256,13 +297,14 @@ export default function AdminDashboard() {
                                         <option value="REJECTED">REJECTED</option>
                                     </select>
                                 </th>
-                                <th className="text-center">Action</th>
+                                <th className="text-center" style={{ minWidth: "150px" }}>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {filteredStudents.map((s, i) => (
+                            {currentItems.map((s, i) => (
                                 <tr key={s.student_id} style={{ backgroundColor: getRowTint(s) }}>
+                                    <td style={{ fontWeight: 600 }}>{startIndex + i + 1}</td>
                                     <td style={{ fontWeight: 600 }}>{s.student_id}</td>
                                     <td style={{ fontSize: 13, color: "#64748b", whiteSpace: "nowrap" }}>
                                         {(() => {
@@ -364,9 +406,9 @@ export default function AdminDashboard() {
                                     <td className="text-center">
                                         <button
                                             onClick={() => setSelectedStudentId(s.student_id)}
-                                            style={{ padding: "8px 16px", fontSize: 12, background: "#3b82f6", color: "white", minWidth: "120px" }}
+                                            style={{ padding: "8px 16px", fontSize: 12, background: "#3b82f6", color: "white", minWidth: "100px", whiteSpace: "nowrap" }}
                                         >
-                                            View & Action
+                                            Action
                                         </button>
                                     </td>
                                 </tr>
@@ -374,6 +416,44 @@ export default function AdminDashboard() {
                         </tbody>
                     </table>
                 </div>
+
+                {totalPages > 1 && (
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", padding: "15px" }}>
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                            style={{
+                                padding: "8px 16px",
+                                background: currentPage === 1 ? "#cbd5e1" : "#3b82f6",
+                                color: "white",
+                                borderRadius: "6px",
+                                border: "none",
+                                cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                                fontWeight: "600"
+                            }}
+                        >
+                            Previous
+                        </button>
+                        <span style={{ fontSize: "14px", fontWeight: "600", color: "#475569" }}>
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                            style={{
+                                padding: "8px 16px",
+                                background: currentPage === totalPages ? "#cbd5e1" : "#3b82f6",
+                                color: "white",
+                                borderRadius: "6px",
+                                border: "none",
+                                cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                                fontWeight: "600"
+                            }}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
             {selectedStudentId && (
                 <StudentDetailModal
