@@ -74,6 +74,9 @@ export default function Login({ isAdminRoute = false }) {
                 const token = await portalLogin();
                 if (!token) throw new Error("Authentication server unavailable");
 
+                // CRITICAL: Store token BEFORE calling student details to ensure headers are set
+                localStorage.setItem("authToken", token);
+
                 const student = await getStudentDetails(regNo);
 
                 if (!student) throw new Error("Student not found in official records");
@@ -95,7 +98,6 @@ export default function Login({ isAdminRoute = false }) {
                 localStorage.setItem("student_id", mappedDetails.id);
                 localStorage.setItem("student_name", mappedDetails["Student Name"]);
                 localStorage.setItem("student_details", JSON.stringify(mappedDetails));
-                localStorage.setItem("authToken", token);
 
                 setMessage(`✅ Welcome, ${mappedDetails["Student Name"]}`);
                 setTimeout(() => window.location.reload(), 1000);

@@ -11,6 +11,7 @@ export const portalLogin = async () => {
 
         if (response.data && response.data.token) {
             sessionStorage.setItem('authToken', response.data.token);
+            localStorage.setItem('authToken', response.data.token); // Add this for consistency
             console.log('Silent login successful. Token stored.');
             return response.data.token;
         } else {
