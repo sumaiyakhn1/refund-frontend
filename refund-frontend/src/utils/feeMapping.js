@@ -10,12 +10,14 @@ export const getSecurityFee = (courseName) => {
     
     // ₹2000 for specific professional/SFS courses
     const sfsCourses = [
+        "bachelor of science (non medical) (self finance)",
+        "bachelor of science (computer science) (self finance)",
+        "bachelor of vocational in banking, financial service",
+        "bachelor of business administration",
+        "bachelor of computer applications",
         "bca",
         "bba",
-        "b.voc",
-        "computer science",
-        "non-medical sfs",
-        "banking"
+        "b.voc"
     ];
 
     const isSfs = sfsCourses.some(course => lowerCourse.includes(course));

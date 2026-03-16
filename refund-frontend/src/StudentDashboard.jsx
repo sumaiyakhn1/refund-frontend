@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getStudentDetails } from "./services/studentService";
+import { getSecurityFee } from "./utils/feeMapping";
 import "./StudentDashboard.css";
 
 export default function StudentDashboard() {
@@ -83,29 +84,7 @@ export default function StudentDashboard() {
         setSubmitting(true);
 
         const currentCourse = String(liveDetails?.["course"] || studentAuthDetails["course"] || "");
-        let securityAmount = String(studentAuthDetails["security"] || "");
-
-        // Auto-set 2000 security for specific SFS courses
-        const sfsCourses = [
-            "Bachelor of Science (Non Medical) (Self Finance)",
-            "Bachelor of Science (Computer Science) (Self Finance)",
-            "Bachelor of Vocational in Banking, Financial Service",
-            "Bachelor of Business Administration",
-            "Bachelor of Computer Applications",
-            // Also matching shorthand if they appear
-            "B.Sc. (Non-Medical) SFS - SFS",
-            "B.Sc. ( computer science ) - SFS",
-            "non-medical sfs",
-            "computer science",
-            "banking",
-            "b.voc",
-            "bba",
-            "bca"
-        ];
-
-        if (sfsCourses.some(c => currentCourse.toLowerCase().includes(c.toLowerCase()))) {
-            securityAmount = "2000";
-        }
+        let securityAmount = String(getSecurityFee(currentCourse));
 
         const payload = {
             student_id: studentId,
