@@ -10,6 +10,7 @@ export default function AdminDashboard() {
     const [statusFilter, setStatusFilter] = useState("ALL");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [showDownloadMenu, setShowDownloadMenu] = useState(false);
     const itemsPerPage = 10;
 
     const filteredStudents = students.filter(s => {
@@ -49,13 +50,27 @@ export default function AdminDashboard() {
         permissions = "all"; // Fallback
     }
 
-    const handleDownload = () => {
-        const hasApproved = students.some(s => s.status === 'APPROVED');
-        if (!hasApproved) {
-            alert("There are currently no approved entries to download.");
-            return;
+    const handleDownload = (type) => {
+        setShowDownloadMenu(false); // Close menu on click
+        if (type === "approved") {
+            const hasApproved = students.some(s => s.status === 'APPROVED' || s.status === 'CLEARED');
+            if (!hasApproved) {
+                alert("There are currently no approved entries to download.");
+                return;
+            }
+        } else if (type === "pending") {
+            const hasPending = students.some(s => !s.status || s.status.toUpperCase() === 'PENDING');
+            if (!hasPending) {
+                alert("There are currently no pending entries to download.");
+                return;
+            }
+        } else if (type === "all") {
+            if (students.length === 0) {
+                alert("There are currently no entries to download.");
+                return;
+            }
         }
-        window.open(`${API_URL}/admin/download`, "_blank");
+        window.open(`${API_URL}/admin/download?type=${type}`, "_blank");
     };
 
     const handleLogout = () => {
@@ -237,12 +252,88 @@ export default function AdminDashboard() {
                             outline: "none"
                         }}
                     />
-                    <button
-                        onClick={handleDownload}
-                        style={{ background: "#059669", padding: "10px 20px" }}
-                    >
-                        📊 Download Excel
-                    </button>
+                    <div style={{ position: "relative" }}>
+                        <button
+                            onClick={() => setShowDownloadMenu(!showDownloadMenu)}
+                            style={{ background: "#059669", padding: "10px 20px", display: "flex", alignItems: "center", gap: "8px" }}
+                        >
+                            📊 Download Excel ▼
+                        </button>
+                        {showDownloadMenu && (
+                            <div style={{
+                                position: "absolute",
+                                top: "100%",
+                                right: 0,
+                                marginTop: "8px",
+                                background: "white",
+                                border: "1px solid #cbd5e1",
+                                borderRadius: "8px",
+                                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                                zIndex: 50,
+                                overflow: "hidden",
+                                display: "flex",
+                                flexDirection: "column",
+                                minWidth: "200px"
+                            }}>
+                                <button
+                                    onClick={() => handleDownload('all')}
+                                    style={{
+                                        background: "transparent",
+                                        color: "#334155",
+                                        padding: "12px 16px",
+                                        width: "100%",
+                                        textAlign: "left",
+                                        border: "none",
+                                        borderBottom: "1px solid #e2e8f0",
+                                        borderRadius: 0,
+                                        fontSize: "14px",
+                                        fontWeight: "500"
+                                    }}
+                                    onMouseOver={(e) => e.target.style.background = "#f1f5f9"}
+                                    onMouseOut={(e) => e.target.style.background = "transparent"}
+                                >
+                                    Download All
+                                </button>
+                                <button
+                                    onClick={() => handleDownload('approved')}
+                                    style={{
+                                        background: "transparent",
+                                        color: "#334155",
+                                        padding: "12px 16px",
+                                        width: "100%",
+                                        textAlign: "left",
+                                        border: "none",
+                                        borderBottom: "1px solid #e2e8f0",
+                                        borderRadius: 0,
+                                        fontSize: "14px",
+                                        fontWeight: "500"
+                                    }}
+                                    onMouseOver={(e) => e.target.style.background = "#f1f5f9"}
+                                    onMouseOut={(e) => e.target.style.background = "transparent"}
+                                >
+                                    Download Approved Only
+                                </button>
+                                <button
+                                    onClick={() => handleDownload('pending')}
+                                    style={{
+                                        background: "transparent",
+                                        color: "#334155",
+                                        padding: "12px 16px",
+                                        width: "100%",
+                                        textAlign: "left",
+                                        border: "none",
+                                        borderRadius: 0,
+                                        fontSize: "14px",
+                                        fontWeight: "500"
+                                    }}
+                                    onMouseOver={(e) => e.target.style.background = "#f1f5f9"}
+                                    onMouseOut={(e) => e.target.style.background = "transparent"}
+                                >
+                                    Download Pending Only
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <button
                         onClick={handleLogout}
                         style={{ background: "#ef4444", padding: "10px 20px" }}
