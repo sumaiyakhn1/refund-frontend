@@ -81,7 +81,9 @@ export default function StudentDashboard() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (submitting || record) return; // Prevent double submission or submitting if already has a record
         setSubmitting(true);
+        setErrorMessage("");
 
         const currentCourse = String(liveDetails?.["course"] || studentAuthDetails["course"] || "");
         let securityAmount = String(getSecurityFee(currentCourse));
@@ -108,7 +110,8 @@ export default function StudentDashboard() {
             });
 
             if (!res.ok) {
-                setErrorMessage("Failed to submit. Please check your data and try again.");
+                const data = await res.json();
+                setErrorMessage(data.detail || "Failed to submit. Please check your data and try again.");
                 setSubmitting(false);
                 return;
             }
@@ -309,7 +312,25 @@ export default function StudentDashboard() {
             </div>
 
             <div className="card" style={{ padding: '32px' }}>
-                <h3 style={{ marginBottom: '24px', fontSize: '18px', fontWeight: '700' }}>Refund Application Form</h3>
+                <h3 style={{ marginBottom: '12px', fontSize: '18px', fontWeight: '700' }}>Refund Application Form</h3>
+                
+                {/* Bank Details Warning */}
+                <div style={{ 
+                    background: "#f0f9ff", 
+                    border: "1px solid #bae6fd", 
+                    borderRadius: "12px", 
+                    padding: "16px", 
+                    marginBottom: "24px",
+                    display: "flex",
+                    gap: "12px",
+                    alignItems: "flex-start"
+                }}>
+                    <span style={{ fontSize: "20px" }}>⚠️</span>
+                    <p style={{ margin: 0, color: "#0369a1", fontSize: "14px", fontWeight: "600", lineHeight: "1.5" }}>
+                        Students must fill their own bank account details. Security fee will not be refunded to any other person's account.
+                    </p>
+                </div>
+
                 <form onSubmit={handleSubmit} className="form-group">
                 <div className="input-group">
                     <label>Student ID</label>

@@ -15,6 +15,7 @@ export default function StudentForm() {
     });
 
     const [msg, setMsg] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     const handleLogout = () => {
         localStorage.clear();
@@ -35,6 +36,8 @@ export default function StudentForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (submitting) return;
+        setSubmitting(true);
         setMsg("Saving...");
 
         const hasEmpty = Object.values(formData).some(
@@ -83,6 +86,8 @@ export default function StudentForm() {
             setMsg("✅ Details saved successfully");
         } catch (err) {
             setMsg("❌ " + err.message);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -98,8 +103,8 @@ export default function StudentForm() {
                 </button>
             </div>
 
-            <p className="subtitle" style={{ textAlign: "left", marginBottom: 20 }}>
-                Please ensure your bank details are correct to process refunds.
+            <p className="subtitle" style={{ textAlign: "left", marginBottom: 20, color: "#0369a1", fontWeight: "600" }}>
+                ⚠️ Students must fill their own bank account details. Security fee will not be refunded to any other person's account.
             </p>
 
             <form onSubmit={handleSubmit} className="form-group">

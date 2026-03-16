@@ -13,6 +13,7 @@ export const getSecurityFee = (courseName) => {
         "bachelor of science (non medical) (self finance)",
         "bachelor of science (computer science) (self finance)",
         "bachelor of vocational in banking, financial service",
+        "bachelor of vocation in banking and financial services",
         "bachelor of business administration",
         "bachelor of computer applications",
         "bca",

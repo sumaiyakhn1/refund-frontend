@@ -10,8 +10,9 @@ export default function AdminDashboard() {
     const [statusFilter, setStatusFilter] = useState("ALL");
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [showDownloadMenu, setShowDownloadMenu] = useState(false);
-    const itemsPerPage = 10;
+    const [isSaving, setIsSaving] = useState(false);
 
     const filteredStudents = students.filter(s => {
         let matchesStatus = true;
@@ -35,9 +36,11 @@ export default function AdminDashboard() {
         return matchesStatus && matchesSearch;
     });
 
-    const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentItems = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
+    const totalPages = itemsPerPage === "ALL" ? 1 : Math.ceil(filteredStudents.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * (itemsPerPage === "ALL" ? filteredStudents.length : itemsPerPage);
+    const currentItems = itemsPerPage === "ALL" 
+        ? filteredStudents 
+        : filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
     // Get role and permissions
     const role = localStorage.getItem("role");
@@ -152,10 +155,13 @@ export default function AdminDashboard() {
     };
 
     const handleSave = async (student) => {
+        if (isSaving) return;
+        setIsSaving(true);
         setMsg("Saving...");
 
         // 🔒 Strip fields backend does not accept
         const payload = {
+            timestamp: student.timestamp || student.Timestamp || null,
             student_id: String(student.student_id || ""),
             student_name: student.student_name != null ? String(student.student_name) : null,
             bank_name: student.bank_name != null ? String(student.bank_name) : null,
@@ -173,6 +179,7 @@ export default function AdminDashboard() {
             engaged: student.engaged != null ? String(student.engaged) : null,
             security: student.security != null ? String(student.security) : null,
             course: student.course != null ? String(student.course) : null,
+            is_admin_update: true,
         };
 
 
@@ -199,6 +206,8 @@ export default function AdminDashboard() {
         } catch (err) {
             setMsg("❌ Network error");
             console.error(err);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -223,14 +232,14 @@ export default function AdminDashboard() {
         <div className="admin-wrapper">
             <div className="dashboard-header">
                 <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                    <div style={{ background: "#334155", padding: "8px", borderRadius: "8px" }}>
-                        <img src="/rksdlogo1.jpeg" alt="RKSD College Logo" style={{ width: "100px" }} />
+                    <div style={{ background: "#334155", padding: "6px", borderRadius: "8px" }}>
+                        <img src="/rksdlogo1.jpeg" alt="RKSD College Logo" style={{ width: "60px" }} />
                     </div>
                     <div>
-                        <h2 className="title" style={{ textAlign: "left", marginBottom: 4, color: "white" }}>
+                        <h2 className="title" style={{ textAlign: "left", marginBottom: 2, color: "white", fontSize: "20px" }}>
                             Admin Dashboard ({adminId})
                         </h2>
-                        <p className="subtitle" style={{ textAlign: "left", marginBottom: 0, color: "white" }}>
+                        <p className="subtitle" style={{ textAlign: "left", marginBottom: 0, color: "white", fontSize: "12px" }}>
                             {permissions === 'all' ? 'Super Admin Access' : `Role: ${permissions}`}
                         </p>
                     </div>
@@ -350,26 +359,26 @@ export default function AdminDashboard() {
             )}
 
             {/* Dashboard Stats */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "24px" }}>
-                <div style={{ padding: "20px", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>TOTAL</div>
-                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#0f172a", marginTop: "8px" }}>{students.length}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "15px", marginBottom: "20px" }}>
+                <div style={{ padding: "12px 15px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "10px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>TOTAL</div>
+                    <div style={{ fontSize: "22px", fontWeight: "700", color: "#0f172a", marginTop: "4px" }}>{students.length}</div>
                 </div>
-                <div style={{ padding: "20px", background: "#fffbeb", borderRadius: "12px", border: "1px solid #fde68a" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>PENDING</div>
-                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#d97706", marginTop: "8px" }}>
+                <div style={{ padding: "12px 15px", background: "#fffbeb", borderRadius: "10px", border: "1px solid #fde68a" }}>
+                    <div style={{ fontSize: "10px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>PENDING</div>
+                    <div style={{ fontSize: "22px", fontWeight: "700", color: "#d97706", marginTop: "4px" }}>
                         {students.filter(s => !s.status || s.status.toUpperCase() === "PENDING").length}
                     </div>
                 </div>
-                <div style={{ padding: "20px", background: "#f0fdf4", borderRadius: "12px", border: "1px solid #bbf7d0" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>APPROVED</div>
-                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#16a34a", marginTop: "8px" }}>
+                <div style={{ padding: "12px 15px", background: "#f0fdf4", borderRadius: "10px", border: "1px solid #bbf7d0" }}>
+                    <div style={{ fontSize: "10px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>APPROVED</div>
+                    <div style={{ fontSize: "22px", fontWeight: "700", color: "#16a34a", marginTop: "4px" }}>
                         {students.filter(s => s.status && (s.status.toUpperCase() === "APPROVED" || s.status.toUpperCase() === "CLEARED")).length}
                     </div>
                 </div>
-                <div style={{ padding: "20px", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>TODAY</div>
-                    <div style={{ fontSize: "28px", fontWeight: "700", color: "#0f172a", marginTop: "8px" }}>
+                <div style={{ padding: "12px 15px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "10px", fontWeight: "700", color: "#64748b", letterSpacing: "0.5px" }}>TODAY</div>
+                    <div style={{ fontSize: "22px", fontWeight: "700", color: "#0f172a", marginTop: "4px" }}>
                         {students.filter(s => {
                             if (!s.timestamp && !s.Timestamp) return false;
                             const ts = s.timestamp || s.Timestamp;
@@ -493,6 +502,7 @@ export default function AdminDashboard() {
                                         <div
                                             title={s.engaged === "YES" ? "Engaged" : "Not Engaged"}
                                             onClick={() => {
+                                                if (isSaving) return;
                                                 const index = students.findIndex(st => st.student_id === s.student_id);
                                                 const newVal = s.engaged === "YES" ? "NO" : "YES";
                                                 handleChange(index, "engaged", newVal);
@@ -540,43 +550,81 @@ export default function AdminDashboard() {
                     </table>
                 </div>
 
-                {totalPages > 1 && (
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", padding: "15px" }}>
-                        <button
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                            disabled={currentPage === 1}
+                <div style={{ 
+                    display: "flex", 
+                    justifyContent: "space-between", 
+                    alignItems: "center", 
+                    padding: "20px",
+                    borderTop: "1px solid #e2e8f0",
+                    background: "#f8fafc"
+                }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <span style={{ fontSize: "14px", color: "#64748b", fontWeight: "600" }}>Items per page:</span>
+                        <select 
+                            value={itemsPerPage} 
+                            onChange={(e) => {
+                                const val = e.target.value === "ALL" ? "ALL" : parseInt(e.target.value);
+                                setItemsPerPage(val);
+                                setCurrentPage(1);
+                            }}
                             style={{
-                                padding: "8px 16px",
-                                background: currentPage === 1 ? "#cbd5e1" : "#3b82f6",
-                                color: "white",
+                                padding: "6px 12px",
                                 borderRadius: "6px",
-                                border: "none",
-                                cursor: currentPage === 1 ? "not-allowed" : "pointer",
-                                fontWeight: "600"
+                                border: "1px solid #cbd5e1",
+                                outline: "none",
+                                fontSize: "14px",
+                                fontWeight: "600",
+                                cursor: "pointer"
                             }}
                         >
-                            Previous
-                        </button>
-                        <span style={{ fontSize: "14px", fontWeight: "600", color: "#475569" }}>
-                            Page {currentPage} of {totalPages}
-                        </span>
-                        <button
-                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                            disabled={currentPage === totalPages}
-                            style={{
-                                padding: "8px 16px",
-                                background: currentPage === totalPages ? "#cbd5e1" : "#3b82f6",
-                                color: "white",
-                                borderRadius: "6px",
-                                border: "none",
-                                cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-                                fontWeight: "600"
-                            }}
-                        >
-                            Next
-                        </button>
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value="ALL">Show All</option>
+                        </select>
                     </div>
-                )}
+
+                    {itemsPerPage !== "ALL" && totalPages > 1 && (
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                                style={{
+                                    padding: "8px 16px",
+                                    background: currentPage === 1 ? "#cbd5e1" : "#3b82f6",
+                                    color: "white",
+                                    borderRadius: "6px",
+                                    border: "none",
+                                    cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                                    fontWeight: "600"
+                                }}
+                            >
+                                Previous
+                            </button>
+                            <span style={{ fontSize: "14px", fontWeight: "600", color: "#475569" }}>
+                                Page {currentPage} of {totalPages}
+                            </span>
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                style={{
+                                    padding: "8px 16px",
+                                    background: currentPage === totalPages ? "#cbd5e1" : "#3b82f6",
+                                    color: "white",
+                                    borderRadius: "6px",
+                                    border: "none",
+                                    cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                                    fontWeight: "600"
+                                }}
+                            >
+                                Next
+                            </button>
+                        </div>
+                    )}
+
+                    <div style={{ fontSize: "14px", color: "#64748b", fontWeight: "600" }}>
+                        Showing {currentItems.length} of {filteredStudents.length} results
+                    </div>
+                </div>
             </div>
             {selectedStudentId && (
                 <StudentDetailModal
