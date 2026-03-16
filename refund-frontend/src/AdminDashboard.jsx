@@ -38,8 +38,8 @@ export default function AdminDashboard() {
 
     const totalPages = itemsPerPage === "ALL" ? 1 : Math.ceil(filteredStudents.length / itemsPerPage);
     const startIndex = (currentPage - 1) * (itemsPerPage === "ALL" ? filteredStudents.length : itemsPerPage);
-    const currentItems = itemsPerPage === "ALL" 
-        ? filteredStudents 
+    const currentItems = itemsPerPage === "ALL"
+        ? filteredStudents
         : filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
     // Get role and permissions
@@ -199,13 +199,15 @@ export default function AdminDashboard() {
                     errorMsg = JSON.stringify(errorMsg);
                 }
                 setMsg(`❌ ${errorMsg}`);
-                return;
+                return false;
             }
 
             setMsg(`✅ Student ${payload.student_id} updated successfully`);
+            return true;
         } catch (err) {
             setMsg("❌ Network error");
             console.error(err);
+            return false;
         } finally {
             setIsSaving(false);
         }
@@ -550,18 +552,18 @@ export default function AdminDashboard() {
                     </table>
                 </div>
 
-                <div style={{ 
-                    display: "flex", 
-                    justifyContent: "space-between", 
-                    alignItems: "center", 
+                <div style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                     padding: "20px",
                     borderTop: "1px solid #e2e8f0",
                     background: "#f8fafc"
                 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <span style={{ fontSize: "14px", color: "#64748b", fontWeight: "600" }}>Items per page:</span>
-                        <select 
-                            value={itemsPerPage} 
+                        <select
+                            value={itemsPerPage}
                             onChange={(e) => {
                                 const val = e.target.value === "ALL" ? "ALL" : parseInt(e.target.value);
                                 setItemsPerPage(val);

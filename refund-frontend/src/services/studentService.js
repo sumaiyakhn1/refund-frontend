@@ -44,3 +44,20 @@ export const getLibraryBookCount = async (studentMongoId) => {
         throw error;
     }
 };
+
+export const getDetailedLibraryIssues = async (studentId) => {
+    try {
+        const response = await api.post('https://api.odpay.in/api/getAllIssueRecords/libraryBook', {
+            entity: '6487ec9e91f7297664a62ffc',
+            pageNumber: 1,
+            pageSize: 500,
+            search: String(studentId),
+            sortBy: "bookAccession",
+            sortOrder: "asc"
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching detailed library issues:", error);
+        throw error;
+    }
+};

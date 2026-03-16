@@ -137,27 +137,27 @@ export default function StudentDashboard() {
         return (
             <div className="dashboard-wrapper">
                 <div className="premium-header">
-                <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                    <div style={{ background: "rgba(255,255,255,0.1)", padding: "10px", borderRadius: "12px", backdropFilter: "blur(4px)" }}>
-                        <img src="/rksdlogo1.jpeg" alt="Logo" style={{ width: "80px" }} />
+                    <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+                        <div style={{ background: "rgba(255,255,255,0.1)", padding: "10px", borderRadius: "12px", backdropFilter: "blur(4px)" }}>
+                            <img src="/rksdlogo1.jpeg" alt="Logo" style={{ width: "80px" }} />
+                        </div>
+                        <div>
+                            <h2 style={{ fontSize: '24px', fontWeight: '800', margin: 0 }}>Application Status</h2>
+                            <p style={{ fontSize: '14px', opacity: 0.8, margin: 0 }}>Track your refund progress</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 style={{ fontSize: '24px', fontWeight: '800', margin: 0 }}>Application Status</h2>
-                        <p style={{ fontSize: '14px', opacity: 0.8, margin: 0 }}>Track your refund progress</p>
-                    </div>
+                    <button onClick={handleLogout} className="logout-btn">
+                        Logout Account
+                    </button>
                 </div>
-                <button onClick={handleLogout} className="logout-btn">
-                    Logout Account
-                </button>
-            </div>
 
                 {/* Student Details Card */}
                 <div className="glass-card student-info-card" style={{ padding: "24px", marginBottom: "24px", display: "flex", gap: "32px", alignItems: "center" }}>
                     {(liveDetails?.photo || studentAuthDetails.photo) && (
                         <div style={{ flexShrink: 0 }}>
-                            <img 
-                                src={liveDetails?.photo || studentAuthDetails.photo} 
-                                alt="Student" 
+                            <img
+                                src={liveDetails?.photo || studentAuthDetails.photo}
+                                alt="Student"
                                 className="student-photo"
                                 style={{ width: "120px", height: "140px" }}
                             />
@@ -274,9 +274,9 @@ export default function StudentDashboard() {
             <div className="glass-card student-info-card" style={{ padding: "24px", marginBottom: "32px", display: "flex", gap: "32px", alignItems: "center" }}>
                 {(liveDetails?.photo || studentAuthDetails.photo) && (
                     <div style={{ flexShrink: 0 }}>
-                        <img 
-                            src={liveDetails?.photo || studentAuthDetails.photo} 
-                            alt="Student" 
+                        <img
+                            src={liveDetails?.photo || studentAuthDetails.photo}
+                            alt="Student"
                             className="student-photo"
                             style={{ width: "120px", height: "140px" }}
                         />
@@ -313,13 +313,13 @@ export default function StudentDashboard() {
 
             <div className="card" style={{ padding: '32px' }}>
                 <h3 style={{ marginBottom: '12px', fontSize: '18px', fontWeight: '700' }}>Refund Application Form</h3>
-                
+
                 {/* Bank Details Warning */}
-                <div style={{ 
-                    background: "#f0f9ff", 
-                    border: "1px solid #bae6fd", 
-                    borderRadius: "12px", 
-                    padding: "16px", 
+                <div style={{
+                    background: "#f0f9ff",
+                    border: "1px solid #bae6fd",
+                    borderRadius: "12px",
+                    padding: "16px",
                     marginBottom: "24px",
                     display: "flex",
                     gap: "12px",
@@ -332,122 +332,122 @@ export default function StudentDashboard() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="form-group">
-                <div className="input-group">
-                    <label>Student ID</label>
-                    <input value={studentId} disabled style={{ background: "#f1f5f9" }} />
-                </div>
-
-                <div className="input-group">
-                    <label>Student Name</label>
-                    <input
-                        name="student_name"
-                        value={form.student_name}
-                        readOnly
-                        style={{ background: "#f1f5f9", cursor: "not-allowed" }}
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>Bank Name</label>
-                    <input
-                        name="bank_name"
-                        placeholder="e.g. HDFC Bank"
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>Account Number</label>
-                    <input
-                        name="account_no"
-                        placeholder="Enter full account number"
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>IFSC Code</label>
-                    <input
-                        name="ifsc"
-                        placeholder="e.g. HDFC0001234"
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>Account Holder Name</label>
-                    <input
-                        name="account_holder"
-                        placeholder="Beneficiary Name"
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>Mother Name</label>
-                    <input
-                        name="mother_name"
-                        placeholder="Enter Mother's Name"
-                        value={form.mother_name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>Contact Mobile Number</label>
-                    <input
-                        name="contact_mobile"
-                        placeholder="Enter another mobile number for contact"
-                        value={form.contact_mobile}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <button type="submit" className="mt-4" disabled={submitting}>
-                    {submitting ? "Processing..." : "Submit Application"}
-                </button>
-            </form>
-        </div>
-
-        {showSuccess && (
-            <div className="modal-overlay">
-                <div className="modal-content success-modal">
-                    <div className="success-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
+                    <div className="input-group">
+                        <label>Student ID</label>
+                        <input value={studentId} disabled style={{ background: "#f1f5f9" }} />
                     </div>
-                    <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#1e293b', marginBottom: '12px' }}>Submission Successful!</h2>
-                    <p style={{ color: '#64748b', marginBottom: '32px', lineHeight: '1.6' }}>Your refund application has been submitted and is now being processed by the administration.</p>
-                    <button 
-                        className="modal-btn"
-                        onClick={() => window.location.reload()}
-                    >
-                        Back to Dashboard
-                    </button>
-                </div>
-            </div>
-        )}
 
-        {errorMessage && (
-            <div className="error-toast">
-                <div className="error-toast-content">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="error-toast-icon">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                    <span>{errorMessage}</span>
-                    <button className="error-toast-close" onClick={() => setErrorMessage("")}>&times;</button>
-                </div>
+                    <div className="input-group">
+                        <label>Student Name</label>
+                        <input
+                            name="student_name"
+                            value={form.student_name}
+                            readOnly
+                            style={{ background: "#f1f5f9", cursor: "not-allowed" }}
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>Bank Name</label>
+                        <input
+                            name="bank_name"
+                            placeholder="e.g. HDFC Bank"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>Account Number</label>
+                        <input
+                            name="account_no"
+                            placeholder="Enter full account number"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>IFSC Code</label>
+                        <input
+                            name="ifsc"
+                            placeholder="e.g. HDFC0001234"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>Account Holder Name</label>
+                        <input
+                            name="account_holder"
+                            placeholder="Beneficiary Name"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>Mother Name</label>
+                        <input
+                            name="mother_name"
+                            placeholder="Enter Mother's Name"
+                            value={form.mother_name}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>Contact Mobile Number</label>
+                        <input
+                            name="contact_mobile"
+                            placeholder="Enter another mobile number for contact"
+                            value={form.contact_mobile}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="mt-4" disabled={submitting}>
+                        {submitting ? "Processing..." : "Submit Application"}
+                    </button>
+                </form>
             </div>
-        )}
-    </div>
-);
+
+            {showSuccess && (
+                <div className="modal-overlay">
+                    <div className="modal-content success-modal">
+                        <div className="success-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#1e293b', marginBottom: '12px' }}>Submission Successful!</h2>
+                        <p style={{ color: '#64748b', marginBottom: '32px', lineHeight: '1.6' }}>Your refund application has been submitted and is now being processed by the administration.</p>
+                        <button
+                            className="modal-btn"
+                            onClick={() => window.location.reload()}
+                        >
+                            Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {errorMessage && (
+                <div className="error-toast">
+                    <div className="error-toast-content">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="error-toast-icon">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span>{errorMessage}</span>
+                        <button className="error-toast-close" onClick={() => setErrorMessage("")}>&times;</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }

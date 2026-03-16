@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { getStudentDetails, checkStudentDues, getLibraryBookCount } from './services/studentService';
+import { getStudentDetails, checkStudentDues, getLibraryBookCount, getDetailedLibraryIssues } from './services/studentService';
 
 export default function StudentDetailModal({ studentId, currentStudent, onUpdate, onSave, permissions, onClose }) {
     const [details, setDetails] = useState(null);
@@ -8,6 +8,17 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
     const [libraryCount, setLibraryCount] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isSavingLocal, setIsSavingLocal] = useState(false);
+
+    const handleLocalSave = async () => {
+        if (isSavingLocal) return;
+        setIsSavingLocal(true);
+        const success = await onSave(currentStudent);
+        if (success) {
+            onClose(); // Auto-close on successful save
+        }
+        setIsSavingLocal(false);
+    };
 
     useEffect(() => {
         if (studentId) {
@@ -19,14 +30,26 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                     if (mongoId) {
                         return Promise.all([
                             checkStudentDues(mongoId),
-                            getLibraryBookCount(mongoId)
+                            getLibraryBookCount(mongoId),
+                            getDetailedLibraryIssues(studentId)
                         ]);
                     }
-                    return [null, null];
+                    return [null, null, null];
                 })
-                .then(([dueData, libraryData]) => {
+                .then(([dueData, libraryData, detailedLibraryData]) => {
                     if (dueData) setDues(dueData.dueDetails);
-                    if (libraryData) setLibraryCount(libraryData.count);
+
+                    // Logic: Calculate library count from production detailed records if available
+                    if (detailedLibraryData && Array.isArray(detailedLibraryData.data)) {
+                        // Count books where returnStatus is "false" (based on API response)
+                        const pendingReturns = detailedLibraryData.data.filter(record => {
+                            return record.returnStatus === "false" || record.returnStatus === false;
+                        });
+                        setLibraryCount(pendingReturns.length);
+                    } else if (libraryData) {
+                        setLibraryCount(libraryData.count);
+                    }
+
                     setLoading(false);
                 })
                 .catch(err => {
@@ -72,7 +95,7 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
     return (
         <Overlay onClose={onClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()} style={{
-                background: "white", width: "95%", maxWidth: "700px",
+                background: "white", width: "95%", maxWidth: "900px",
                 borderRadius: "16px", overflow: "hidden",
                 boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
                 display: "flex", flexDirection: "column", maxHeight: "90vh"
@@ -147,7 +170,6 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                             <InfoItem label="Gender" value={details.gender} />
                             <InfoItem label="Phone (College Record)" value={details.phone || details.student_mobile} />
                             <InfoItem label="Email" value={details.email} />
-                            <InfoItem label="Stream" value={details.stream} />
                             <InfoItem label="Class / Section" value={`${details.batch || ""} ${details.section ? `(Sec ${details.section})` : ""} `} />
                             <InfoItem label="Course / Class" value={details.course} />
                             <InfoItem label="Application Contact No" value={details.contact_mobile || currentStudent?.contact_mobile} />
@@ -285,17 +307,20 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
 
                             <div style={{ marginTop: "20px", padding: "20px 0", borderTop: "1px solid #e2e8f0" }}>
                                 <button
-                                    onClick={() => onSave(currentStudent)}
+                                    onClick={handleLocalSave}
+                                    disabled={isSavingLocal}
                                     style={{
                                         width: "100%", padding: "14px",
-                                        background: "#2563eb", color: "white",
+                                        background: isSavingLocal ? "#94a3b8" : "#2563eb",
+                                        color: "white",
                                         border: "none", borderRadius: "10px",
                                         fontWeight: "700", fontSize: "16px",
-                                        boxShadow: "0 4px 15px rgba(37, 99, 235, 0.3)",
-                                        cursor: "pointer", transition: "all 0.2s"
+                                        boxShadow: isSavingLocal ? "none" : "0 4px 15px rgba(37, 99, 235, 0.3)",
+                                        cursor: isSavingLocal ? "not-allowed" : "pointer",
+                                        transition: "all 0.2s"
                                     }}
                                 >
-                                    💾 Save All Updates
+                                    {isSavingLocal ? "⏳ Saving Updates..." : "💾 Save All Updates"}
                                 </button>
                             </div>
                         </>
@@ -331,7 +356,7 @@ const Section = ({ title, children }) => (
 );
 
 const Grid = ({ children }) => (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>{children}</div>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "25px" }}>{children}</div>
 );
 
 const InfoItem = ({ label, value }) => (

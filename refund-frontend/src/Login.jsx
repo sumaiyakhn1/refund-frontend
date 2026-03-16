@@ -7,7 +7,7 @@ export default function Login({ isAdminRoute = false }) {
     const API_URL = import.meta.env.VITE_API_URL || "https://refund-backend-1.onrender.com";
     console.log("Current Backend URL:", API_URL);
     const [role, setRole] = useState(isAdminRoute ? "admin" : "student"); // 'student' | 'admin'
-    
+
     // Detect pre-fill from URL
     const getInitialRegNo = () => {
         const params = new URLSearchParams(window.location.search || window.location.hash.split('?')[1]);
@@ -64,7 +64,7 @@ export default function Login({ isAdminRoute = false }) {
                     const errorData = await validationRes.json();
                     throw new Error(errorData.detail || "Validation server error");
                 }
-                
+
                 const validationData = await validationRes.json();
                 if (!validationData.valid) {
                     throw new Error(validationData.message || "You are not applicable for the college security refund");
@@ -75,7 +75,7 @@ export default function Login({ isAdminRoute = false }) {
                 if (!token) throw new Error("Authentication server unavailable");
 
                 const student = await getStudentDetails(regNo);
-                
+
                 if (!student) throw new Error("Student not found in official records");
 
                 // Store student details for pre-filling the form
