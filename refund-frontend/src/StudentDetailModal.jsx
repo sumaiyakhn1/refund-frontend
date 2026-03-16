@@ -281,26 +281,65 @@ export default function StudentDetailModal({ studentId, currentStudent, onUpdate
                                 </div>
                             </Section>
 
-                            {/* Section: Remark */}
-                            <Section title="Admin Remark">
+                            {/* Section: Department Remarks */}
+                            <Section title="Department Wise Remarks">
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                                    {[
+                                        { field: "fee_remark", label: "Fee Dept Remark", perm: "fee_cleared" },
+                                        { field: "lib_remark", label: "Library Dept Remark", perm: "library_cleared" },
+                                        { field: "schol_remark", label: "Scholarship Dept Remark", perm: "scholarship_cleared" },
+                                        { field: "reg_remark", label: "Registration Dept Remark", perm: "registration_cleared" }
+                                    ].map(rem => {
+                                        const canEdit = permissions === "all" || permissions === rem.perm;
+                                        return (
+                                            <div key={rem.field} style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "15px" }}>
+                                                <label style={{ fontSize: "12px", fontWeight: "700", color: "#64748b", marginBottom: "8px", display: "block" }}>{rem.label}</label>
+                                                <textarea
+                                                    value={currentStudent[rem.field] || ""}
+                                                    onChange={(e) => onUpdate(rem.field, e.target.value)}
+                                                    disabled={!canEdit}
+                                                    placeholder={canEdit ? `Add ${rem.label}...` : "No remark added"}
+                                                    style={{
+                                                        width: "100%",
+                                                        minHeight: "60px",
+                                                        padding: "10px",
+                                                        borderRadius: "8px",
+                                                        border: "1px solid #cbd5e1",
+                                                        fontSize: "13px",
+                                                        fontFamily: "inherit",
+                                                        resize: "vertical",
+                                                        background: canEdit ? "white" : "#f1f5f9",
+                                                        cursor: canEdit ? "text" : "not-allowed"
+                                                    }}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </Section>
+
+                            {/* Section: General Remark (Existing) */}
+                            <Section title="General Remark">
                                 <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "20px" }}>
                                     <textarea
                                         value={currentStudent.remark || ""}
                                         onChange={(e) => onUpdate("remark", e.target.value)}
-                                        placeholder="Add a remark (e.g., Missing document, Pending verification...)"
+                                        disabled={permissions !== "all"}
+                                        placeholder="General remark (Super Admin only)"
                                         style={{
                                             width: "100%",
-                                            minHeight: "100px",
+                                            minHeight: "80px",
                                             padding: "12px",
                                             borderRadius: "8px",
                                             border: "1px solid #cbd5e1",
                                             fontSize: "14px",
                                             fontFamily: "inherit",
-                                            resize: "vertical"
+                                            resize: "vertical",
+                                            background: permissions === "all" ? "white" : "#f1f5f9"
                                         }}
                                     />
                                     <p style={{ fontSize: "12px", color: "#64748b", marginTop: "8px" }}>
-                                        This remark will be visible to the student in their dashboard.
+                                        These remarks will be visible to the student in their dashboard.
                                     </p>
                                 </div>
                             </Section>

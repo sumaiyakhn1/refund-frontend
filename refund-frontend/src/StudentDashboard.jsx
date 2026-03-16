@@ -230,20 +230,32 @@ export default function StudentDashboard() {
                     )}
 
                     <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1e293b", marginTop: "40px", marginBottom: "20px", borderBottom: '2px solid #f1f5f9', paddingBottom: '10px' }}>Department Clearances</h3>
-                    <div className="info-grid">
+                    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                         {[
-                            { label: "Fee Clearance", value: record.fee_cleared },
-                            { label: "Library Clearance", value: record.library_cleared },
-                            { label: "Scholarship Clearance", value: record.scholarship_cleared },
-                            { label: "Registration Clearance", value: record.registration_cleared }
-                        ].map((clearance) => (
-                            <div key={clearance.label} className="info-item">
-                                <span className="info-label">{clearance.label}</span>
-                                <span className="info-value">
-                                    <span className={`badge ${clearance.value === 'YES' ? 'badge-green' : 'badge-red'}`}>
-                                        {clearance.value === 'YES' ? 'CLEARED' : 'PENDING'}
+                            { label: "Fee Dept", value: record.fee_cleared, remark: record.fee_remark },
+                            { label: "Library Dept", value: record.library_cleared, remark: record.lib_remark },
+                            { label: "Scholarship Dept", value: record.scholarship_cleared, remark: record.schol_remark },
+                            { label: "Registration Dept", value: record.registration_cleared, remark: record.reg_remark }
+                        ].map((dept) => (
+                            <div key={dept.label} style={{
+                                background: "white", padding: "16px", borderRadius: "12px", border: "1px solid #e2e8f0",
+                                display: "flex", flexDirection: "column", gap: "12px"
+                            }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                    <span style={{ fontWeight: "700", color: "#475569" }}>{dept.label}</span>
+                                    <span className={`badge ${dept.value === 'YES' ? 'badge-green' : 'badge-red'}`}>
+                                        {dept.value === 'YES' ? 'CLEARED' : 'PENDING'}
                                     </span>
-                                </span>
+                                </div>
+                                {dept.remark && (
+                                    <div style={{
+                                        fontSize: "14px", color: "#64748b", background: "#f8fafc",
+                                        padding: "10px 14px", borderRadius: "8px", borderLeft: "4px solid #3b82f6"
+                                    }}>
+                                        <span style={{ fontWeight: "700", color: "#3b82f6" }}>Remark: </span>
+                                        {dept.remark}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

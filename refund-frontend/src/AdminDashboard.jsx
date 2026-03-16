@@ -179,6 +179,10 @@ export default function AdminDashboard() {
             engaged: student.engaged != null ? String(student.engaged) : null,
             security: student.security != null ? String(student.security) : null,
             course: student.course != null ? String(student.course) : null,
+            fee_remark: student.fee_remark != null ? String(student.fee_remark) : null,
+            lib_remark: student.lib_remark != null ? String(student.lib_remark) : null,
+            schol_remark: student.schol_remark != null ? String(student.schol_remark) : null,
+            reg_remark: student.reg_remark != null ? String(student.reg_remark) : null,
             is_admin_update: true,
         };
 
@@ -467,6 +471,12 @@ export default function AdminDashboard() {
                                         >
                                             {s.fee_cleared}
                                         </div>
+                                        {s.fee_remark && (
+                                            <div style={{
+                                                width: "6px", height: "6px", borderRadius: "50%",
+                                                background: "#3b82f6", margin: "4px auto 0"
+                                            }} title={`Remark: ${s.fee_remark}`} />
+                                        )}
                                     </td>
 
                                     <td className="text-center">
@@ -477,6 +487,12 @@ export default function AdminDashboard() {
                                         >
                                             {s.library_cleared}
                                         </div>
+                                        {s.lib_remark && (
+                                            <div style={{
+                                                width: "6px", height: "6px", borderRadius: "50%",
+                                                background: "#3b82f6", margin: "4px auto 0"
+                                            }} title={`Remark: ${s.lib_remark}`} />
+                                        )}
                                     </td>
 
                                     <td className="text-center">
@@ -487,6 +503,12 @@ export default function AdminDashboard() {
                                         >
                                             {s.scholarship_cleared}
                                         </div>
+                                        {s.schol_remark && (
+                                            <div style={{
+                                                width: "6px", height: "6px", borderRadius: "50%",
+                                                background: "#3b82f6", margin: "4px auto 0"
+                                            }} title={`Remark: ${s.schol_remark}`} />
+                                        )}
                                     </td>
 
                                     <td className="text-center">
@@ -497,6 +519,12 @@ export default function AdminDashboard() {
                                         >
                                             {s.registration_cleared}
                                         </div>
+                                        {s.reg_remark && (
+                                            <div style={{
+                                                width: "6px", height: "6px", borderRadius: "50%",
+                                                background: "#3b82f6", margin: "4px auto 0"
+                                            }} title={`Remark: ${s.reg_remark}`} />
+                                        )}
                                     </td>
 
                                     {/* Engaged toggle slider */}
