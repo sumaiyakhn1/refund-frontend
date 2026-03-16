@@ -8,14 +8,30 @@ export default function AdminDashboard() {
     const [msg, setMsg] = useState("");
     const [selectedStudentId, setSelectedStudentId] = useState(null);
     const [statusFilter, setStatusFilter] = useState("ALL");
+    const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
     const filteredStudents = students.filter(s => {
-        if (statusFilter === "ALL") return true;
-        const sStatus = s.status ? s.status.toUpperCase() : "";
-        if (statusFilter === "CLEARED") return sStatus === "APPROVED" || sStatus === "CLEARED";
-        return sStatus === statusFilter;
+        let matchesStatus = true;
+        if (statusFilter !== "ALL") {
+            const sStatus = s.status ? s.status.toUpperCase() : "";
+            if (statusFilter === "CLEARED") {
+                matchesStatus = sStatus === "APPROVED" || sStatus === "CLEARED";
+            } else {
+                matchesStatus = sStatus === statusFilter;
+            }
+        }
+
+        let matchesSearch = true;
+        if (searchQuery.trim() !== "") {
+            const q = searchQuery.toLowerCase();
+            const idMatch = s.student_id ? String(s.student_id).toLowerCase().includes(q) : false;
+            const nameMatch = s.student_name ? String(s.student_name).toLowerCase().includes(q) : false;
+            matchesSearch = idMatch || nameMatch;
+        }
+
+        return matchesStatus && matchesSearch;
     });
 
     const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
@@ -204,7 +220,23 @@ export default function AdminDashboard() {
                         </p>
                     </div>
                 </div>
-                <div style={{ display: "flex", gap: "10px" }}>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <input
+                        type="text"
+                        placeholder="Search Roll No or Name..."
+                        value={searchQuery}
+                        onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        style={{
+                            padding: "10px",
+                            borderRadius: "8px",
+                            border: "1px solid #cbd5e1",
+                            minWidth: "250px",
+                            outline: "none"
+                        }}
+                    />
                     <button
                         onClick={handleDownload}
                         style={{ background: "#059669", padding: "10px 20px" }}
